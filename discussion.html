@@ -115,7 +115,7 @@
               />
             </div>
             <div class="panel-title">
-              <h3>Arya the narrator</h3>
+              <h3 id="botSideTitle">Bot Name</h3>
               <span>Bot Panel</span>
             </div>
           </div>
@@ -331,6 +331,7 @@
     <script src="chatbot-template/examples/example-configs.js"></script>
 
     <!-- Chat History Manager -->
+    <script src="js/utils.js"></script>
     <script src="js/chat-history-manager.js"></script>
 
     <!-- Shared Footer Component -->
@@ -1165,67 +1166,7 @@
         return { isEdge, isSafari, isChrome, isFirefox };
       }
 
-      /**
-       * Memastikan text bersih dari markdown/HTML untuk preview
-       * Dengan handling khusus untuk berbagai browser
-       */
-      function ensureCleanText(text) {
-        if (!text || typeof text !== "string") return "";
-
-        const browser = getBrowserInfo();
-
-        try {
-          let cleaned = text;
-
-          // Edge memerlukan pembersihan ekstra
-          if (browser.isEdge) {
-            // Pembersihan khusus Edge untuk markdown yang stubborn
-            cleaned = cleaned.replace(/\*{1,3}([^*]+)\*{1,3}/g, "$1");
-            cleaned = cleaned.replace(/_{1,3}([^_]+)_{1,3}/g, "$1");
-            cleaned = cleaned.replace(/#{1,6}\s+/g, "");
-            cleaned = cleaned.replace(/```[\s\S]*?```/g, "[Kode]");
-            cleaned = cleaned.replace(/`([^`]+)`/g, "$1");
-            cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
-            cleaned = cleaned.replace(/!\[([^\]]*)\]\([^)]*\)/g, "[Gambar]");
-            cleaned = cleaned.replace(/^>\s+/gm, "");
-            cleaned = cleaned.replace(/^[-*+]\s+/gm, "• ");
-            cleaned = cleaned.replace(/\|.*\|/g, "[Tabel]");
-          }
-
-          // Safari handling
-          if (browser.isSafari) {
-            cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF]/g, "");
-            cleaned = cleaned.replace(/\u00A0/g, " ");
-          }
-
-          // General cleanup untuk semua browser
-          cleaned = cleaned.replace(/<[^>]*>/g, ""); // HTML tags
-          cleaned = cleaned.replace(/&[a-zA-Z0-9#]+;/g, ""); // HTML entities
-          cleaned = cleaned.replace(/\s+/g, " "); // Multiple spaces
-          cleaned = cleaned.trim();
-
-          // Fallback jika masih ada masalah
-          if (
-            cleaned.includes("*") ||
-            cleaned.includes("#") ||
-            cleaned.includes("`")
-          ) {
-            console.warn(
-              "Markdown tags still present after cleaning:",
-              cleaned
-            );
-            cleaned = cleaned.replace(/[*#`_~\[\]()]/g, "");
-          }
-
-          return cleaned;
-        } catch (error) {
-          console.error("Error cleaning text:", error);
-          return text
-            .replace(/<[^>]*>/g, "")
-            .replace(/[*#`_~\[\]()]/g, "")
-            .trim();
-        }
-      }
+      
 
       /**
        * Update history preview display dengan format user-friendly
@@ -1254,8 +1195,8 @@
         const messagesHtml = previewData.previewMessages
           .map((msg, index) => {
             // Pastikan text sudah dibersihkan dengan baik
-            const cleanedMessage = ensureCleanText(msg.message);
-            const cleanedFullMessage = ensureCleanText(msg.fullMessage);
+            const cleanedMessage = window.Utils.cleanText(msg.message);
+            const cleanedFullMessage = window.Utils.cleanText(msg.fullMessage);
 
             return `
             <div class="preview-message" data-message-id="${

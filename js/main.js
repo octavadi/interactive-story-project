@@ -3,30 +3,6 @@
  * File utama untuk menjalankan aplikasi chatbot
  */
 
-// Konfigurasi global
-const CHAT_CONFIG = {
-  // Webhook URLs untuk n8n lokal (pastikan sesuai dengan webhook n8n Anda)
-  webhook: {
-    input: "http://localhost:5678/webhook/inputWebhook",
-    output: "http://localhost:5678/webhook/outputWebhook", // Diperbaiki: URL berbeda untuk output
-  },
-
-  // Konfigurasi UI
-  ui: {
-    theme: "light", // 'light' atau 'dark'
-    language: "id", // 'id' atau 'en'
-    autoScroll: true,
-    showTimestamps: true,
-  },
-
-  // Konfigurasi chat
-  chat: {
-    maxMessages: 100,
-    typingDelay: 1500,
-    enableSound: false,
-  },
-};
-
 // Inisialisasi aplikasi
 class ChatbotApp {
   constructor() {
@@ -74,32 +50,21 @@ class ChatbotApp {
   }
 
   /**
-   * Tunggu semua web component siap dengan timeout
+   * Tunggu semua web component siap menggunakan customElements.whenDefined
    */
   async waitForComponents() {
-    return new Promise((resolve, reject) => {
-      const startTime = Date.now();
-      const timeout = 10000; // 10 second timeout
-      
-      const checkComponents = () => {
-        const chatInput = document.querySelector("chat-input");
-        const chatOutput = document.querySelector("chat-output");
-
-        if (chatInput && chatOutput) {
-          const loadTime = Date.now() - startTime;
-          console.log(`✅ Components loaded in ${loadTime}ms`);
-          resolve();
-        } else if (Date.now() - startTime > timeout) {
-          const error = new Error('Components failed to load within timeout');
-          console.error('❌ Component loading timeout:', error);
-          reject(error);
-        } else {
-          setTimeout(checkComponents, 100);
-        }
-      };
-
-      checkComponents();
-    });
+    const startTime = Date.now();
+    try {
+      await Promise.all([
+        customElements.whenDefined('chat-input'),
+        customElements.whenDefined('chat-output')
+      ]);
+      const loadTime = Date.now() - startTime;
+      console.log(`✅ Components loaded in ${loadTime}ms`);
+    } catch (error) {
+      console.error('❌ Component loading failed:', error);
+      throw new Error('Components failed to load.');
+    }
   }
 
   /**
@@ -144,13 +109,14 @@ class ChatbotApp {
    * Setup webhook with error handling
    */
   setupWebhook() {
-    if (this.chatManager && this.chatManager.configureWebhook) {
+    if (this.chatManager && this.chatManager.configureWebhook && window.ConfigManager) {
+      const config = window.ConfigManager.getConfig();
       // Wrap webhook configuration with error handling
       const safeConfigureWebhook = ErrorHandler.createSafeWrapper(
         () => this.chatManager.configureWebhook(
-          CHAT_CONFIG.webhook.input,
-          CHAT_CONFIG.webhook.output,
-          CHAT_CONFIG.chat.typingDelay
+          config.webhook.inputUrl,
+          config.webhook.outputUrl,
+          config.typing.duration
         ),
         'webhook-configuration'
       );
@@ -163,7 +129,9 @@ class ChatbotApp {
    * Setup theme
    */
   setupTheme() {
-    const theme = localStorage.getItem("chatbot_theme") || CHAT_CONFIG.ui.theme;
+    if (!window.ConfigManager) return;
+    const config = window.ConfigManager.getConfig();
+    const theme = localStorage.getItem("chatbot_theme") || config.ui.theme;
     this.applyTheme(theme);
   }
 
@@ -185,8 +153,10 @@ class ChatbotApp {
    * Setup language
    */
   setupLanguage() {
+    if (!window.ConfigManager) return;
+    const config = window.ConfigManager.getConfig();
     const language =
-      localStorage.getItem("chatbot_language") || CHAT_CONFIG.ui.language;
+      localStorage.getItem("chatbot_language") || config.ui.language;
     this.applyLanguage(language);
   }
 
@@ -262,10 +232,11 @@ class ChatbotApp {
    * Dispatch ready event
    */
   dispatchReadyEvent() {
+    const config = window.ConfigManager ? window.ConfigManager.getConfig() : {};
     const event = new CustomEvent("chatbotReady", {
       detail: {
         timestamp: new Date(),
-        config: CHAT_CONFIG,
+        config: config,
       },
     });
     document.dispatchEvent(event);
@@ -306,33 +277,6 @@ class ChatbotApp {
    */
   getChatManager() {
     return this.chatManager;
-  }
-
-  /**
-   * Get config
-   */
-  getConfig() {
-    return { ...CHAT_CONFIG };
-  }
-
-  /**
-   * Update config
-   */
-  updateConfig(newConfig) {
-    Object.assign(CHAT_CONFIG, newConfig);
-
-    // Re-apply settings
-    if (newConfig.ui?.theme) {
-      this.applyTheme(newConfig.ui.theme);
-    }
-
-    if (newConfig.ui?.language) {
-      this.applyLanguage(newConfig.ui.language);
-    }
-
-    if (newConfig.webhook) {
-      this.setupWebhook();
-    }
   }
 }
 
@@ -379,6 +323,13 @@ window.ChatbotUtils = {
    * Test webhook connection with retry mechanism
    */
   testWebhook: async (url) => {
+    if (!url && window.ConfigManager) {
+        url = window.ConfigManager.getConfig().webhook.inputUrl;
+    }
+    if (!url) {
+        console.error("Webhook URL not provided and not found in config.");
+        return;
+    }
     return await ErrorHandler.withRetry(
       async () => {
         const response = await fetch(url, {

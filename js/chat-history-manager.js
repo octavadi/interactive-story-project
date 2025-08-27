@@ -937,7 +937,7 @@ class ChatHistoryManager {
       });
 
       // Bersihkan message dari HTML/markdown tags untuk preview
-      const cleanMessage = this.stripHtmlAndMarkdown(msg.message);
+      const cleanMessage = window.Utils.cleanText(msg.message);
 
       // Truncate message jika terlalu panjang
       const truncatedMessage =
@@ -966,81 +966,7 @@ class ChatHistoryManager {
     };
   }
 
-  /**
-   * Membersihkan HTML dan Markdown tags dari text
-   * @param {string} text - Text yang akan dibersihkan
-   */
-  stripHtmlAndMarkdown(text) {
-    if (!text || typeof text !== "string") return "";
-
-    try {
-      let cleaned = text;
-
-      // Remove HTML tags and entities
-      cleaned = cleaned.replace(/<[^>]*>/g, "");
-      cleaned = cleaned.replace(/&[a-zA-Z0-9#]+;/g, "");
-
-      // Remove markdown formatting (comprehensive)
-      // Bold and italic combinations
-      cleaned = cleaned.replace(/\*\*\*([^*]+)\*\*\*/g, "$1"); // Bold + Italic
-      cleaned = cleaned.replace(/___([^_]+)___/g, "$1"); // Bold + Italic underscore
-      cleaned = cleaned.replace(/\*\*([^*]+)\*\*/g, "$1"); // Bold
-      cleaned = cleaned.replace(/__([^_]+)__/g, "$1"); // Bold underscore
-      cleaned = cleaned.replace(/\*([^*]+)\*/g, "$1"); // Italic
-      cleaned = cleaned.replace(/_([^_]+)_/g, "$1"); // Italic underscore
-
-      // Remove strikethrough
-      cleaned = cleaned.replace(/~~([^~]+)~~/g, "$1");
-
-      // Remove headers
-      cleaned = cleaned.replace(/^#{1,6}\s+/gm, "");
-
-      // Remove links (keep the link text)
-      cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
-      cleaned = cleaned.replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1");
-
-      // Remove images (replace with text indicator)
-      cleaned = cleaned.replace(/!\[([^\]]*)\]\([^)]*\)/g, "[Gambar: $1]");
-
-      // Remove code blocks and inline code
-      cleaned = cleaned.replace(/```[\s\S]*?```/g, "[Blok Kode]");
-      cleaned = cleaned.replace(/~~~/g, "[Blok Kode]");
-      cleaned = cleaned.replace(/`([^`]+)`/g, "$1");
-
-      // Remove blockquotes
-      cleaned = cleaned.replace(/^>\s+/gm, "");
-
-      // Remove lists (keep content)
-      cleaned = cleaned.replace(/^[\s]*[-*+]\s+/gm, "• ");
-      cleaned = cleaned.replace(/^[\s]*\d+\.\s+/gm, "");
-
-      // Remove horizontal rules
-      cleaned = cleaned.replace(/^[-*_]{3,}$/gm, "");
-      cleaned = cleaned.replace(/^={3,}$/gm, "");
-
-      // Remove tables (replace with indicator)
-      cleaned = cleaned.replace(/\|.*\|/g, "[Tabel]");
-
-      // Clean up whitespace and newlines
-      cleaned = cleaned.replace(/\n\s*\n\s*\n/g, "\n\n"); // Max 2 consecutive newlines
-      cleaned = cleaned.replace(/\n\s*\n/g, "\n"); // Single newline for paragraphs
-      cleaned = cleaned.replace(/^\s+|\s+$/g, ""); // Trim start/end
-      cleaned = cleaned.replace(/[ \t]+/g, " "); // Multiple spaces to single space
-
-      // Handle special characters that might cause issues in Edge
-      cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF]/g, ""); // Zero-width spaces
-      cleaned = cleaned.replace(/\u00A0/g, " "); // Non-breaking space to regular space
-
-      return cleaned;
-    } catch (error) {
-      console.warn("Error cleaning markdown text:", error);
-      // Fallback to simple HTML tag removal
-      return text
-        .replace(/<[^>]*>/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-  }
+  
 
   /**
    * Mendapatkan statistik histori

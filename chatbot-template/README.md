@@ -56,8 +56,8 @@ cp -r chatbot-template/ /path/to/your-new-project/
     <title>Your Interactive Story</title>
 
     <!-- Browser Compatibility -->
-    <link rel="stylesheet" href="browser-compatibility.css" />
-    <script src="js/browser-polyfills.js"></script>
+    <link rel="stylesheet" href="../styles/browser-compatibility.css" />
+    <script src="../js/browser-polyfills.js"></script>
 
     <!-- Chatbot Template CSS -->
     <link rel="stylesheet" href="chatbot-template/styles/chatbot.css" />

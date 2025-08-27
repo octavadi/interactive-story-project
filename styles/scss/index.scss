@@ -71,7 +71,7 @@
   /* Animated background overlay */
   position: relative;
   overflow-x: hidden;
-  
+
   /* Ensure proper stacking context */
   z-index: 1;
   isolation: isolate;
@@ -305,10 +305,10 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  
+
   /* Smooth transition for layout shifts */
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  
+
   /* Ensure proper stacking context */
   isolation: isolate;
 }
@@ -353,7 +353,7 @@
   /* Smooth interactions */
   transition: all var(--story-duration-medium) var(--story-ease-smooth);
   cursor: default;
-  
+
   /* Ensure proper containment */
   contain: layout style paint;
 }
@@ -409,10 +409,10 @@
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
   letter-spacing: -0.025em;
   line-height: 1.2;
-  
+
   /* Magical glow effect */
   filter: drop-shadow(0 0 20px rgba(240, 147, 251, 0.3));
-  
+
   /* Smooth transitions */
   transition: all var(--story-duration-medium) var(--story-ease-smooth);
 }
@@ -459,11 +459,11 @@
   transition: all var(--story-duration-medium) var(--story-ease-magical);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  
+
   /* Enhanced shadows */
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  
+
   /* Ensure button is clickable */
   position: relative;
   z-index: 20;
@@ -500,7 +500,11 @@
 }
 
 @keyframes bounceArrow {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -539,7 +543,7 @@
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   letter-spacing: 0.025em;
-  
+
   /* Smooth transitions */
   transition: all var(--story-duration-medium) var(--story-ease-smooth);
 }
@@ -672,11 +676,11 @@
   right: 2.5rem;
   bottom: calc(2.5rem + 64px + 1rem);
   top: 4rem;
-  
+
   /* Sizing */
   width: 370px;
   max-width: calc(100vw - 2rem);
-  
+
   /* Visuals */
   background: rgba(30, 41, 59, 0.85);
   -webkit-backdrop-filter: blur(16px);
@@ -684,7 +688,7 @@
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(102, 126, 234, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  
+
   /* NEW: Parent container handles padding and gap */
   display: flex;
   flex-direction: column;
@@ -893,9 +897,6 @@
     margin-left: 20px !important; /* 20px padding between content and chatbot */
     margin-right: 0 !important; /* Remove right margin */
     max-width: calc(100vw - 520px) !important;
-  }
-}
-    padding: 3rem;
   }
 }
 
@@ -1177,7 +1178,7 @@
   .scene-container::before {
     animation: none; /* Reduce motion on small screens */
   }
-  
+
   /* Mobile styles for chatbot moved to chatbot-button.css */
 
   .scene-title {
@@ -1283,7 +1284,7 @@
   }
 
   .scene-text p {
-    font-size: 0.9rem;
+    font-size: 1rem; /* Adjusted for better mobile readability */
     line-height: 1.6;
   }
 
