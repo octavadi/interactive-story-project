@@ -672,11 +672,12 @@
   right: 2.5rem;
   /* Position it neatly above the button (64px button height + 1rem gap) */
   bottom: calc(2.5rem + 64px + 1rem); 
+  top: 4rem; /* Set top constraint to stretch the window */
   
   /* Sizing */
   width: 370px;
   max-width: calc(100vw - 2rem);
-  max-height: 60vh;
+  /* max-height is removed to allow stretching */
   
   /* Visuals */
   background: rgba(30, 41, 59, 0.75); /* Glassmorphism background */
