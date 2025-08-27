@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <title>Discussion - Interactive Story</title>
+
+    <!-- Browser Compatibility Styles -->
+    <link rel="stylesheet" href="styles/browser-compatibility.css" />
+    <!-- Polyfills for older browsers -->
+    <script src="js/browser-polyfills.js"></script>
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <!-- Discussion Page Specific Styles -->
+    <link rel="stylesheet" href="styles/discussion.css" />
+    <link rel="stylesheet" href="styles/history-panel.css" />
+
+    <!-- Chatbot Template -->
+    <link rel="stylesheet" href="chatbot-template/styles/chatbot.css" />
+
+    <!-- jsPDF Library for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </head>
+
+  <body>
+    <div class="discussion-page-wrapper">
+      <!-- Header -->
+      <header class="scene-header">
+        <div class="header-content">
+          <h1 class="scene-title" id="storyTitle">💬 Judul Cerita</h1>
+          <nav class="scene-nav">
+            <button class="nav-btn" onclick="location.href='index.html'">
+              🏠 Main Story
+            </button>
+            <button class="nav-btn" onclick="toggleFullscreen()">
+              🔍 Fullscreen
+            </button>
+            <button class="nav-btn" onclick="toggleHistoryPanel()">
+              📚 Histori
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="discussion-container">
+        <!-- User Panel (Left) -->
+        <div class="discussion-panel user-panel">
+          <div class="panel-header">
+            <div
+              class="panel-avatar"
+              onclick="uploadUserImage()"
+              id="userAvatar"
+            >
+              <div class="avatar-circle user-avatar">
+                <span class="avatar-icon">👤</span>
+              </div>
+              <input
+                type="file"
+                id="userImageInput"
+                accept="image/*"
+                class="hidden-file-input"
+                onchange="handleUserImageUpload(event)"
+                title="Upload user avatar image"
+                aria-label="Upload user avatar image"
+              />
+            </div>
+            <div class="panel-title">
+              <h3>You</h3>
+              <span>User Panel</span>
+            </div>
+          </div>
+
+          <div class="panel-description">
+            Tampilkan image/avatar user dan
+            <strong>bubble chat dari input user</strong> di area ini.
+          </div>
+
+          <div class="panel-chat-area user-chat-area">
+            <!-- User messages will appear here -->
+            <div id="userChatMessages" class="chat-messages-list">
+              <!-- User messages will appear here dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Bot Panel (Right) -->
+        <div class="discussion-panel bot-panel">
+          <div class="panel-header">
+            <div class="panel-avatar" onclick="uploadBotImage()" id="botAvatar">
+              <div class="avatar-circle bot-avatar">
+                <span class="avatar-icon">🤖</span>
+              </div>
+              <input
+                type="file"
+                id="botImageInput"
+                accept="image/*"
+                class="hidden-file-input"
+                onchange="handleBotImageUpload(event)"
+                title="Upload bot avatar image"
+                aria-label="Upload bot avatar image"
+              />
+            </div>
+            <div class="panel-title">
+              <h3>Arya the narrator</h3>
+              <span>Bot Panel</span>
+            </div>
+          </div>
+
+          <div class="panel-description">
+            Tampilkan image/avatar bot dan
+            <strong>bubble balasan chatbot</strong> di area ini.
+          </div>
+
+          <div class="panel-chat-area bot-chat-area">
+            <!-- Bot messages will appear here -->
+            <div id="botChatMessages" class="chat-messages-list">
+              <!-- Bot messages will appear here dynamically -->
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Chat Input Area -->
+      <div class="discussion-input-fixed">
+        <div class="input-container">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Tulis pesan untuk bot..."
+            class="message-input"
+          />
+          <button
+            id="sendButton"
+            class="send-button stylish-send-btn"
+            aria-label="Kirim Pesan"
+          >
+            <span class="send-btn-text">Kirim</span>
+            <svg
+              class="send-btn-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path d="M2 10L18 3L15 17L10 12L2 10Z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- History Panel -->
+      <div id="historyPanel" class="history-panel hidden">
+        <div class="history-panel-content">
+          <div class="history-header">
+            <h3>📚 Histori Percakapan</h3>
+            <button class="close-btn" onclick="toggleHistoryPanel()">✕</button>
+          </div>
+
+          <div class="history-stats" id="historyStats">
+            <!-- Stats akan diisi secara dinamis -->
+          </div>
+
+          <div class="history-actions">
+            <div class="action-group">
+              <h4>💾 Ekspor Histori</h4>
+              <div class="export-options">
+                <div class="scope-selector">
+                  <label>
+                    <input
+                      type="radio"
+                      name="exportScope"
+                      value="session"
+                      checked
+                    />
+                    Sesi saat ini
+                  </label>
+                  <label>
+                    <input type="radio" name="exportScope" value="all" />
+                    Semua percakapan
+                  </label>
+                </div>
+
+                <div class="export-buttons">
+                  <button
+                    class="export-btn export-txt"
+                    onclick="exportHistory('txt')"
+                  >
+                    📄 Plain Text
+                  </button>
+                  <button
+                    class="export-btn export-md"
+                    onclick="exportHistory('md')"
+                  >
+                    📝 Markdown
+                  </button>
+                  <button
+                    class="export-btn export-pdf"
+                    onclick="exportHistory('pdf')"
+                  >
+                    📕 PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-group">
+              <h4>🗑️ Kelola Histori</h4>
+              <div class="manage-buttons">
+                <button
+                  class="manage-btn save-session-btn"
+                  onclick="toggleSessionSave()"
+                  id="saveSessionBtn"
+                >
+                  💾 Simpan Sesi
+                </button>
+                <button
+                  class="manage-btn clear-session-btn"
+                  onclick="clearSessionHistory()"
+                >
+                  Hapus Sesi Ini
+                </button>
+                <button
+                  class="manage-btn clear-all-btn"
+                  onclick="clearAllHistory()"
+                >
+                  Hapus Semua
+                </button>
+              </div>
+            </div>
+
+            <div class="action-group">
+              <h4>⚙️ Pengaturan Auto-Cleanup</h4>
+              <div class="settings-container">
+                <div class="setting-item">
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="autoCleanupToggle"
+                      onchange="updateAutoCleanupSetting(this.checked)"
+                    />
+                    <span>Auto-hapus saat refresh browser</span>
+                  </label>
+                  <small
+                    >Histori akan dihapus otomatis jika tidak disimpan
+                    manual</small
+                  >
+                </div>
+
+                <div class="setting-item">
+                  <label>
+                    <span>Max pesan per sesi:</span>
+                    <input
+                      type="number"
+                      id="maxMessagesInput"
+                      min="10"
+                      max="500"
+                      onchange="updateMaxMessages(this.value)"
+                    />
+                  </label>
+                </div>
+
+                <div class="setting-item">
+                  <label>
+                    <span>Simpan histori selama:</span>
+                    <select
+                      id="retentionSelect"
+                      onchange="updateRetentionDays(this.value)"
+                    >
+                      <option value="1">1 hari</option>
+                      <option value="3">3 hari</option>
+                      <option value="7">7 hari</option>
+                      <option value="14">14 hari</option>
+                      <option value="30">30 hari</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="setting-item">
+                  <button class="manage-btn" onclick="showDataUsageInfo()">
+                    📊 Info Storage
+                  </button>
+                  <button class="manage-btn" onclick="performManualCleanup()">
+                    🧹 Cleanup Manual
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="history-preview" id="historyPreview">
+            <h4>👁️ Preview Histori</h4>
+            <div class="preview-content" id="previewContent">
+              <!-- Preview akan diisi secara dinamis -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Panel Overlay -->
+      <div
+        id="historyOverlay"
+        class="history-overlay hidden"
+        onclick="toggleHistoryPanel()"
+      ></div>
+
+      <!-- Shared Footer -->
+      <shared-footer current-page="discussion"></shared-footer>
+    </div>
+
+    <!-- Chatbot Template Scripts -->
+    <script src="chatbot-template/js/config-manager.js"></script>
+    <script src="chatbot-template/js/chat-manager.js"></script>
+    <script src="chatbot-template/components/chat-input.js"></script>
+    <script src="chatbot-template/components/chat-output.js"></script>
+    <script src="chatbot-template/examples/example-configs.js"></script>
+
+    <!-- Chat History Manager -->
+    <script src="js/chat-history-manager.js"></script>
+
+    <!-- Shared Footer Component -->
+    <script src="components/shared-footer.js"></script>
+
+    <!-- Discussion Page Script -->
+    <script>
+      /**
+       * Discussion Page Initialization
+       * Handles two-panel chat interface with n8n webhook integration
+       */
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("💬 Discussion page initialized");
+
+        // Debug: Check browser and ChatHistoryManager availability
+        const browserInfo = getBrowserInfo();
+        console.log("🌐 Browser detection:", browserInfo);
+
+        console.log("🔍 Checking ChatHistoryManager availability...");
+        if (window.ChatHistoryManager) {
+          console.log(
+            "✅ ChatHistoryManager is available:",
+            window.ChatHistoryManager
+          );
+          console.log(
+            "📊 Current history length:",
+            window.ChatHistoryManager.history
+              ? window.ChatHistoryManager.history.length
+              : "undefined"
+          );
+          console.log(
+            "⚙️ Current settings:",
+            window.ChatHistoryManager.settings
+          );
+
+          // Test markdown cleaning function
+          if (browserInfo.isEdge) {
+            console.log("🔧 Edge detected - Testing markdown cleaning...");
+            const testText = "**Bold** and *italic* and `code` text";
+            const cleaned = ensureCleanText(testText);
+            console.log("🧪 Test input:", testText);
+            console.log("🧪 Test output:", cleaned);
+          }
+        } else {
+          console.error(
+            "❌ ChatHistoryManager is NOT available on window object"
+          );
+          console.log(
+            "🔍 Available window properties:",
+            Object.keys(window).filter((key) => key.includes("Chat"))
+          );
+        }
+
+        // Initialize discussion-specific configuration
+        setupDiscussionBot();
+
+        // Setup UI components
+        updatePageTitle();
+        loadSavedAvatars();
+        setupChatInput();
+
+        // Setup event listeners for dynamic updates
+        setupConfigurationListener();
+
+        // Webhook configuration and migration
+        debugWebhookConfig();
+        migrateWebhookConfig();
+
+        // Initialize data management UI
+        setTimeout(() => {
+          initializeDataManagementUI();
+        }, 1000);
+
+        // Display welcome message after components are ready
+        displayWelcomeMessage();
+      });
+
+      /**
+       * Setup configuration change listener for dynamic UI updates
+       */
+      function setupConfigurationListener() {
+        document.addEventListener("configChanged", function (event) {
+          updatePageTitle();
+          updateBotSideTitle();
+        });
+      }
+
+      /**
+       * Display welcome message with current bot configuration
+       */
+      function displayWelcomeMessage() {
+        setTimeout(() => {
+          const currentConfig = window.ConfigManager
+            ? window.ConfigManager.getConfig()
+            : {};
+          const botName = currentConfig.botName || "Arya";
+          addBotMessage(
+            `Selamat datang di halaman diskusi! Saya ${botName}, siap untuk berdiskusi tentang cerita ini. Silakan ajukan pertanyaan atau pendapat Anda.`
+          );
+        }, 1500);
+      }
+
+      /**
+       * Setup discussion-specific bot configuration
+       * Enhances base config for two-panel discussion interface
+       */
+      function setupDiscussionBot() {
+        if (
+          !window.ConfigManager ||
+          localStorage.getItem("discussion_config_set")
+        ) {
+          return; // Skip if ConfigManager not available or already configured
+        }
+
+        try {
+          const currentConfig = window.ConfigManager.getConfig();
+
+          // Enhance configuration for discussion mode
+          const discussionConfig = {
+            ...currentConfig,
+            botDescription:
+              currentConfig.botDescription ||
+              "Discussion partner untuk cerita interaktif",
+            typingMessage: "sedang memikirkan respons...",
+            placeholder: "Ketik pesan Anda di sini...",
+            discussionMode: true,
+          };
+
+          window.ConfigManager.saveConfig(discussionConfig);
+          localStorage.setItem("discussion_config_set", "true");
+          console.log("💬 Discussion bot configuration updated");
+        } catch (error) {
+          console.error("⚠️ Error setting up discussion bot:", error);
+        }
+      }
+
+      /**
+       * Update page title based on story title and bot configuration
+       */
+      function updatePageTitle() {
+        const titleElement = document.getElementById("storyTitle");
+        if (!titleElement) return;
+
+        const storyTitle =
+          localStorage.getItem("story_title") || "Interactive Story";
+        titleElement.textContent = `💬 ${storyTitle} - Discussion`;
+        document.title = `Discussion - ${storyTitle}`;
+      }
+
+      /**
+       * Update bot side title with current configuration
+       */
+      function updateBotSideTitle() {
+        const botSideTitle = document.getElementById("botSideTitle");
+        if (!botSideTitle) return;
+
+        const config = window.ConfigManager
+          ? window.ConfigManager.getConfig()
+          : {};
+        const botAvatar = config.botAvatar || "🤖";
+        const botName = config.botName || "Chatbot";
+        botSideTitle.textContent = `${botAvatar} ${botName}`;
+      }
+
+      /**
+       * Setup chat input handlers for sending messages
+       * Supports both button click and Enter key
+       */
+      function setupChatInput() {
+        const messageInput = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+
+        if (!messageInput || !sendButton) {
+          console.warn("⚠️ Chat input elements not found");
+          return;
+        }
+
+        // Send message on button click
+        sendButton.addEventListener("click", sendMessage);
+
+        // Send message on Enter key press
+        messageInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            // Allow Shift+Enter for newlines
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+
+        // Auto-focus input for better UX
+        messageInput.focus();
+      }
+
+      /**
+       * Send message from user input to bot
+       * Validates input, displays user message, and sends to n8n webhook
+       */
+      function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+
+        // Validate message input
+        if (!message) {
+          console.warn("⚠️ Empty message, not sending");
+          return;
+        }
+
+        try {
+          // Display user message in left panel
+          addUserMessage(message);
+
+          // Clear input for next message
+          messageInput.value = "";
+
+          // Send to n8n webhook for bot response
+          sendToN8NWebhook(message);
+        } catch (error) {
+          console.error("⚠️ Error sending message:", error);
+          addBotMessage(
+            "Terjadi kesalahan saat mengirim pesan. Silakan coba lagi."
+          );
+        }
+      }
+
+      async function sendToN8NWebhook(message) {
+        try {
+          // Get webhook URL from config
+          const config = window.ConfigManager
+            ? window.ConfigManager.getConfig()
+            : {};
+
+          // Try multiple sources for webhook URL
+          let webhookUrl = null;
+
+          // 1. Check ConfigManager webhook structure
+          if (config.webhook && config.webhook.inputUrl) {
+            webhookUrl = config.webhook.inputUrl;
+            console.log("📡 Using webhook from ConfigManager:", webhookUrl);
+          }
+          // 2. Check old localStorage key
+          else if (localStorage.getItem("correct_webhook_url")) {
+            webhookUrl = localStorage.getItem("correct_webhook_url");
+            console.log(
+              "📡 Using webhook from localStorage (old):",
+              webhookUrl
+            );
+          }
+          // 3. Check direct webhookUrl property (fallback)
+          else if (config.webhookUrl) {
+            webhookUrl = config.webhookUrl;
+            console.log("📡 Using webhook from config.webhookUrl:", webhookUrl);
+          }
+
+          if (!webhookUrl) {
+            console.error("❌ No webhook URL configured");
+            console.log("🔍 Debug config:", config);
+            console.log("🔍 Debug localStorage:", {
+              correct_webhook_url: localStorage.getItem("correct_webhook_url"),
+              chatbot_config: localStorage.getItem("chatbot_config"),
+            });
+            addBotMessage(
+              "Error: Webhook URL belum dikonfigurasi. Silakan set di halaman Bot Settings (botSetting.html)."
+            );
+            return;
+          }
+
+          // Generate session ID
+          let sessionId = sessionStorage.getItem("sessionId");
+          if (!sessionId) {
+            sessionId = generateHexSessionId();
+            sessionStorage.setItem("sessionId", sessionId);
+          }
+
+          // Get or generate user ID
+          let userId = localStorage.getItem("userId");
+          if (!userId) {
+            userId = generateHexSessionId(); // Use same format for user ID
+            localStorage.setItem("userId", userId);
+          }
+
+          // Prepare payload
+          const payload = {
+            chatInput: message,
+            timestamp: new Date().toISOString(),
+            userId: userId,
+            sessionId: sessionId,
+            source: "discussion-page",
+          };
+
+          console.log("📤 Sending to n8n webhook:", payload);
+
+          // Show typing indicator
+          showTypingIndicator();
+
+          // Send to webhook
+          const response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log("✅ Webhook response:", result);
+            console.log("🔍 Response type:", typeof result);
+            console.log("🔍 Available properties:", Object.keys(result || {}));
+
+            // Extract message from response
+            let botMessage = "";
+            if (typeof result === "string") {
+              botMessage = result;
+            } else if (result.message) {
+              botMessage = result.message;
+            } else if (result.output) {
+              botMessage = result.output;
+            } else if (result.response) {
+              botMessage = result.response;
+            } else if (result.data) {
+              botMessage = result.data;
+            } else {
+              console.log("⚠️ Unknown response format, using JSON.stringify");
+              botMessage = JSON.stringify(result);
+            }
+
+            console.log("💬 Extracted message:", botMessage);
+
+            // Hide typing indicator and show response
+            hideTypingIndicator();
+            addBotMessage(botMessage);
+          } else {
+            console.error(
+              "❌ Webhook error:",
+              response.status,
+              response.statusText
+            );
+            hideTypingIndicator();
+            addBotMessage(
+              `Error ${response.status}: ${response.statusText}. Periksa koneksi ke n8n.`
+            );
+          }
+        } catch (error) {
+          console.error("❌ Network error:", error);
+          hideTypingIndicator();
+          addBotMessage(
+            "Error: Tidak dapat menghubungi server. Periksa koneksi internet dan n8n."
+          );
+        }
+      }
+
+      /**
+       * Generate 32-character hexadecimal session ID
+       * @returns {string} Random hex string for session identification
+       */
+      function generateHexSessionId() {
+        return Array.from({ length: 32 }, () =>
+          Math.floor(Math.random() * 16).toString(16)
+        ).join("");
+      }
+
+      /**
+       * Show typing indicator in bot chat area
+       * Displays animated dots to indicate bot is processing response
+       */
+      function showTypingIndicator() {
+        const botChatArea = document.getElementById("botChatMessages");
+        if (!botChatArea) return;
+
+        // Remove any existing typing indicator to prevent duplicates
+        hideTypingIndicator();
+
+        // Create new typing indicator element
+        const typingDiv = document.createElement("div");
+        typingDiv.className = "typing-indicator";
+        typingDiv.innerHTML = `
+          <div class="typing-message">
+            <span class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span class="typing-text">sedang mengetik...</span>
+          </div>
+        `;
+
+        botChatArea.appendChild(typingDiv);
+        botChatArea.scrollTop = botChatArea.scrollHeight;
+      }
+
+      /**
+       * Hide typing indicator from bot chat area
+       * Removes the animated typing dots element
+       */
+      function hideTypingIndicator() {
+        const botChatArea = document.getElementById("botChatMessages");
+        if (!botChatArea) return;
+
+        const typingIndicator = botChatArea.querySelector(".typing-indicator");
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+
+      /**
+       * Debug webhook configuration for troubleshooting
+       * Logs configuration state from multiple sources
+       * Only runs in development environment
+       */
+      function debugWebhookConfig() {
+        // Skip debug in production
+        if (window.location.hostname !== "localhost") return;
+
+        console.log("🔧 DEBUG: Checking webhook configuration...");
+
+        // Debug ConfigManager state
+        if (window.ConfigManager) {
+          const config = window.ConfigManager.getConfig();
+          console.log("📋 ConfigManager config:", config);
+
+          if (config.webhook) {
+            console.log("🔗 Webhook URLs:", {
+              input: config.webhook.inputUrl,
+              output: config.webhook.outputUrl,
+            });
+          } else {
+            console.warn("⚠️ No webhook configuration found in ConfigManager");
+          }
+        } else {
+          console.error("❌ ConfigManager not available");
+        }
+
+        // Debug localStorage state
+        debugLocalStorageConfig();
+      }
+
+      /**
+       * Debug localStorage configuration state
+       */
+      function debugLocalStorageConfig() {
+        console.log("💾 localStorage webhook items:");
+
+        const items = {
+          correct_webhook_url: localStorage.getItem("correct_webhook_url"),
+          chatbot_config: localStorage.getItem("chatbot_config"),
+        };
+
+        console.table(items);
+
+        // Parse and validate chatbot config if exists
+        if (items.chatbot_config) {
+          try {
+            const parsed = JSON.parse(items.chatbot_config);
+            console.log("🔍 Parsed chatbot config:", parsed);
+          } catch (error) {
+            console.error("❌ Error parsing chatbot config:", error);
+          }
+        }
+      }
+
+      /**
+       * Migrate old webhook URL format to new structured format
+       * Converts legacy 'correct_webhook_url' to new webhook object structure
+       */
+      function migrateWebhookConfig() {
+        if (!window.ConfigManager) {
+          console.warn("⚠️ ConfigManager not available for migration");
+          return;
+        }
+
+        try {
+          const config = window.ConfigManager.getConfig();
+          const oldWebhookUrl = localStorage.getItem("correct_webhook_url");
+
+          // Check if migration is needed
+          const needsMigration =
+            oldWebhookUrl && (!config.webhook || !config.webhook.inputUrl);
+
+          if (needsMigration) {
+            console.log("🔄 Migrating old webhook URL format...");
+
+            const updatedConfig = {
+              ...config,
+              webhook: {
+                inputUrl: oldWebhookUrl,
+                outputUrl: oldWebhookUrl, // Use same URL for both input and output
+              },
+            };
+
+            if (window.ConfigManager.saveConfig(updatedConfig)) {
+              console.log("✅ Webhook URL migrated successfully!");
+              localStorage.removeItem("correct_webhook_url"); // Clean up old key
+            } else {
+              console.error("❌ Failed to save migrated config");
+            }
+          }
+        } catch (error) {
+          console.error("❌ Error during webhook migration:", error);
+        }
+      }
+
+      /**
+       * Add user message to left panel
+       * @param {string} message - The user's message text
+       */
+      function addUserMessage(message) {
+        const userChatArea = document.getElementById("userChatMessages");
+        if (!userChatArea) {
+          console.warn("⚠️ User chat area not found");
+          return;
+        }
+
+        // Create message element with timestamp
+        const messageDiv = createMessageElement(message, "user-message");
+        userChatArea.appendChild(messageDiv);
+
+        // Auto-scroll to show new message
+        scrollToBottom(userChatArea);
+
+        // Simpan ke histori
+        if (window.ChatHistoryManager) {
+          console.log("🔄 Attempting to save user message to history...");
+          try {
+            const result = window.ChatHistoryManager.addMessage(
+              "user",
+              message
+            );
+            if (result) {
+              console.log("✅ User message saved successfully:", result);
+            } else {
+              console.error(
+                "❌ Failed to save user message - addMessage returned null"
+              );
+            }
+          } catch (error) {
+            console.error("❌ Error saving user message:", error);
+          }
+        } else {
+          console.error(
+            "❌ ChatHistoryManager not available when saving user message"
+          );
+        }
+      }
+
+      /**
+       * Add bot message to right panel
+       * @param {string} message - The bot's response message
+       */
+      function addBotMessage(message) {
+        const botChatArea = document.getElementById("botChatMessages");
+        if (!botChatArea) {
+          console.warn("⚠️ Bot chat area not found");
+          return;
+        }
+
+        // Create message element with timestamp
+        const messageDiv = createMessageElement(message, "bot-message");
+        botChatArea.appendChild(messageDiv);
+
+        // Auto-scroll to show new message
+        scrollToBottom(botChatArea);
+
+        // Simpan ke histori dengan nama bot
+        if (window.ChatHistoryManager) {
+          console.log("🔄 Attempting to save bot message to history...");
+          try {
+            const config = window.ConfigManager
+              ? window.ConfigManager.getConfig()
+              : {};
+            const botName = config.botName || "Arya the narrator";
+            const result = window.ChatHistoryManager.addMessage(
+              botName,
+              message
+            );
+            if (result) {
+              console.log("✅ Bot message saved successfully:", result);
+            } else {
+              console.error(
+                "❌ Failed to save bot message - addMessage returned null"
+              );
+            }
+          } catch (error) {
+            console.error("❌ Error saving bot message:", error);
+          }
+        } else {
+          console.error(
+            "❌ ChatHistoryManager not available when saving bot message"
+          );
+        }
+      }
+
+      /**
+       * Create message element with timestamp
+       * @param {string} message - The message text
+       * @param {string} className - CSS class for message type
+       * @returns {HTMLElement} Message element
+       */
+      function createMessageElement(message, className) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message-bubble ${className}`;
+
+        // Generate localized timestamp
+        const timeString = new Date().toLocaleString("id-ID", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+
+        // Create message structure
+        messageDiv.innerHTML = `
+          <div class="message-text">${escapeHtml(message)}</div>
+          <div class="message-timestamp">${timeString}</div>
+        `;
+
+        return messageDiv;
+      }
+
+      /**
+       * Escape HTML characters to prevent XSS
+       * @param {string} text - Text to escape
+       * @returns {string} Escaped text
+       */
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      /**
+       * Scroll element to bottom smoothly
+       * @param {HTMLElement} element - Element to scroll
+       */
+      function scrollToBottom(element) {
+        element.scrollTop = element.scrollHeight;
+      }
+
+      // Image upload functions
+      function uploadUserImage() {
+        document.getElementById("userImageInput").click();
+      }
+
+      function uploadBotImage() {
+        document.getElementById("botImageInput").click();
+      }
+
+      function handleUserImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const userAvatar = document.getElementById("userAvatar");
+            userAvatar.innerHTML = `
+              <img src="${e.target.result}" alt="User avatar">
+              <input type="file" id="userImageInput" accept="image/*" class="hidden-file-input" onchange="handleUserImageUpload(event)">
+            `;
+
+            // Save to localStorage
+            localStorage.setItem("user_avatar", e.target.result);
+            console.log("👤 User avatar updated");
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function handleBotImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const botAvatar = document.getElementById("botAvatar");
+            botAvatar.innerHTML = `
+              <img src="${e.target.result}" alt="Bot avatar">
+              <input type="file" id="botImageInput" accept="image/*" class="hidden-file-input" onchange="handleBotImageUpload(event)">
+            `;
+
+            // Save to localStorage and update config
+            localStorage.setItem("bot_avatar_image", e.target.result);
+
+            // Update bot config with new avatar
+            if (window.ConfigManager) {
+              const currentConfig = window.ConfigManager.getConfig();
+              currentConfig.botAvatarImage = e.target.result;
+              window.ConfigManager.saveConfig(currentConfig);
+            }
+
+            console.log("🤖 Bot avatar updated");
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function loadSavedAvatars() {
+        // Load user avatar
+        const savedUserAvatar = localStorage.getItem("user_avatar");
+        if (savedUserAvatar) {
+          const userAvatar = document.getElementById("userAvatar");
+          userAvatar.innerHTML = `
+            <img src="${savedUserAvatar}" alt="User avatar">
+            <input type="file" id="userImageInput" accept="image/*" class="hidden-file-input" onchange="handleUserImageUpload(event)">
+          `;
+        }
+
+        // Load bot avatar
+        const savedBotAvatar = localStorage.getItem("bot_avatar_image");
+        if (savedBotAvatar) {
+          const botAvatar = document.getElementById("botAvatar");
+          botAvatar.innerHTML = `
+            <img src="${savedBotAvatar}" alt="Bot avatar">
+            <input type="file" id="botImageInput" accept="image/*" class="hidden-file-input" onchange="handleBotImageUpload(event)">
+          `;
+        }
+      }
+
+      // Utility functions
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            console.log(
+              `Error attempting to enable fullscreen: ${err.message}`
+            );
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      // Set story title from localStorage or prompt
+      function setStoryTitle() {
+        const currentTitle = localStorage.getItem("story_title");
+        const newTitle = prompt(
+          "Enter story title:",
+          currentTitle || "My Interactive Story"
+        );
+
+        if (newTitle && newTitle.trim()) {
+          localStorage.setItem("story_title", newTitle.trim());
+          updatePageTitle();
+          console.log("📖 Story title updated:", newTitle);
+        }
+      }
+
+      // History Panel Functions
+
+      /**
+       * Toggle visibility of history panel
+       */
+      function toggleHistoryPanel() {
+        const panel = document.getElementById("historyPanel");
+        const overlay = document.getElementById("historyOverlay");
+
+        if (!panel || !overlay) return;
+
+        const isHidden = panel.classList.contains("hidden");
+
+        if (isHidden) {
+          // Show panel
+          panel.classList.remove("hidden");
+          overlay.classList.remove("hidden");
+          updateHistoryStats();
+          updateHistoryPreview();
+          document.body.style.overflow = "hidden"; // Prevent background scroll
+        } else {
+          // Hide panel
+          panel.classList.add("hidden");
+          overlay.classList.add("hidden");
+          document.body.style.overflow = "auto"; // Restore scroll
+        }
+      }
+
+      /**
+       * Update history statistics display
+       */
+      function updateHistoryStats() {
+        const statsContainer = document.getElementById("historyStats");
+        if (!statsContainer || !window.ChatHistoryManager) return;
+
+        const sessionStats = window.ChatHistoryManager.getHistoryStats(true);
+        const allStats = window.ChatHistoryManager.getHistoryStats(false);
+
+        let duration = "";
+        if (sessionStats.duration > 0) {
+          const minutes = Math.floor(sessionStats.duration / (1000 * 60));
+          const hours = Math.floor(minutes / 60);
+
+          if (hours > 0) {
+            duration = `${hours} jam ${minutes % 60} menit`;
+          } else {
+            duration = `${minutes} menit`;
+          }
+        }
+
+        statsContainer.innerHTML = `
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">Sesi Ini:</span>
+              <span class="stat-value">${
+                sessionStats.totalMessages
+              } pesan</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Total Semua:</span>
+              <span class="stat-value">${allStats.totalMessages} pesan</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Durasi Sesi:</span>
+              <span class="stat-value">${duration || "Baru dimulai"}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">User/Bot:</span>
+              <span class="stat-value">${sessionStats.userMessages}/${
+          sessionStats.botMessages
+        }</span>
+            </div>
+          </div>
+        `;
+      }
+
+      /**
+       * Browser detection utility
+       */
+      function getBrowserInfo() {
+        const userAgent = navigator.userAgent;
+        const isEdge = /Edge\/|Edg\//.test(userAgent);
+        const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+        const isChrome =
+          /Chrome/.test(userAgent) && !/Edge\/|Edg\//.test(userAgent);
+        const isFirefox = /Firefox/.test(userAgent);
+
+        return { isEdge, isSafari, isChrome, isFirefox };
+      }
+
+      /**
+       * Memastikan text bersih dari markdown/HTML untuk preview
+       * Dengan handling khusus untuk berbagai browser
+       */
+      function ensureCleanText(text) {
+        if (!text || typeof text !== "string") return "";
+
+        const browser = getBrowserInfo();
+
+        try {
+          let cleaned = text;
+
+          // Edge memerlukan pembersihan ekstra
+          if (browser.isEdge) {
+            // Pembersihan khusus Edge untuk markdown yang stubborn
+            cleaned = cleaned.replace(/\*{1,3}([^*]+)\*{1,3}/g, "$1");
+            cleaned = cleaned.replace(/_{1,3}([^_]+)_{1,3}/g, "$1");
+            cleaned = cleaned.replace(/#{1,6}\s+/g, "");
+            cleaned = cleaned.replace(/```[\s\S]*?```/g, "[Kode]");
+            cleaned = cleaned.replace(/`([^`]+)`/g, "$1");
+            cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
+            cleaned = cleaned.replace(/!\[([^\]]*)\]\([^)]*\)/g, "[Gambar]");
+            cleaned = cleaned.replace(/^>\s+/gm, "");
+            cleaned = cleaned.replace(/^[-*+]\s+/gm, "• ");
+            cleaned = cleaned.replace(/\|.*\|/g, "[Tabel]");
+          }
+
+          // Safari handling
+          if (browser.isSafari) {
+            cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF]/g, "");
+            cleaned = cleaned.replace(/\u00A0/g, " ");
+          }
+
+          // General cleanup untuk semua browser
+          cleaned = cleaned.replace(/<[^>]*>/g, ""); // HTML tags
+          cleaned = cleaned.replace(/&[a-zA-Z0-9#]+;/g, ""); // HTML entities
+          cleaned = cleaned.replace(/\s+/g, " "); // Multiple spaces
+          cleaned = cleaned.trim();
+
+          // Fallback jika masih ada masalah
+          if (
+            cleaned.includes("*") ||
+            cleaned.includes("#") ||
+            cleaned.includes("`")
+          ) {
+            console.warn(
+              "Markdown tags still present after cleaning:",
+              cleaned
+            );
+            cleaned = cleaned.replace(/[*#`_~\[\]()]/g, "");
+          }
+
+          return cleaned;
+        } catch (error) {
+          console.error("Error cleaning text:", error);
+          return text
+            .replace(/<[^>]*>/g, "")
+            .replace(/[*#`_~\[\]()]/g, "")
+            .trim();
+        }
+      }
+
+      /**
+       * Update history preview display dengan format user-friendly
+       */
+      function updateHistoryPreview() {
+        const previewContainer = document.getElementById("previewContent");
+        if (!previewContainer || !window.ChatHistoryManager) return;
+
+        const currentSessionOnly =
+          document.querySelector('input[name="exportScope"]:checked')?.value ===
+          "session";
+
+        // Gunakan fungsi preview yang user-friendly
+        const previewData = window.ChatHistoryManager.createUserFriendlyPreview(
+          currentSessionOnly,
+          5
+        );
+
+        if (!previewData.hasMessages) {
+          previewContainer.innerHTML =
+            '<p class="no-messages">Belum ada pesan dalam histori.</p>';
+          return;
+        }
+
+        // Buat HTML untuk preview messages dengan styling yang lebih baik
+        const messagesHtml = previewData.previewMessages
+          .map((msg, index) => {
+            // Pastikan text sudah dibersihkan dengan baik
+            const cleanedMessage = ensureCleanText(msg.message);
+            const cleanedFullMessage = ensureCleanText(msg.fullMessage);
+
+            return `
+            <div class="preview-message" data-message-id="${
+              msg.id
+            }" data-speaker="${msg.speaker}">
+              <div class="preview-header">
+                <span class="preview-speaker">
+                  <span class="speaker-icon">${msg.speakerIcon}</span>
+                  <span class="speaker-name">${msg.speakerDisplayName}</span>
+                </span>
+                <span class="preview-time">${msg.timestamp}</span>
+              </div>
+              <div class="preview-text" title="${escapeHtml(
+                cleanedFullMessage
+              )}" data-cleaned="true">
+                ${escapeHtml(cleanedMessage)}
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        // Tambahkan info jumlah pesan tambahan jika ada
+        const remainingNote =
+          previewData.remainingCount > 0
+            ? `<div class="preview-note">
+               <span class="remaining-count">+ ${previewData.remainingCount} pesan lainnya</span>
+               <span class="total-info">Total: ${previewData.totalMessages} pesan</span>
+             </div>`
+            : `<div class="preview-note">
+               <span class="total-info">Total: ${previewData.totalMessages} pesan</span>
+             </div>`;
+
+        previewContainer.innerHTML = messagesHtml + remainingNote;
+
+        // Tambahkan event listener untuk preview text click
+        const previewTexts = previewContainer.querySelectorAll(".preview-text");
+        previewTexts.forEach((element, index) => {
+          element.addEventListener("click", function () {
+            const fullMessage = this.getAttribute("title");
+            const messageData = previewData.previewMessages[index];
+            showFullMessageModal(messageData, fullMessage);
+          });
+        });
+      }
+
+      /**
+       * Tampilkan modal dengan pesan lengkap
+       */
+      function showFullMessageModal(messageData, fullMessage) {
+        // Buat modal overlay
+        const modalOverlay = document.createElement("div");
+        modalOverlay.className = "message-modal-overlay";
+        modalOverlay.onclick = () => closeFullMessageModal();
+
+        // Buat modal content
+        const modalContent = document.createElement("div");
+        modalContent.className = "message-modal-content";
+        modalContent.onclick = (e) => e.stopPropagation();
+
+        const timestamp = messageData.rawTimestamp.toLocaleString("id-ID", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+
+        modalContent.innerHTML = `
+          <div class="modal-header">
+            <div class="modal-speaker">
+              <span class="modal-speaker-icon">${messageData.speakerIcon}</span>
+              <span class="modal-speaker-name">${
+                messageData.speakerDisplayName
+              }</span>
+            </div>
+            <button class="modal-close-btn" onclick="closeFullMessageModal()">✕</button>
+          </div>
+          <div class="modal-timestamp">${timestamp}</div>
+          <div class="modal-message">${escapeHtml(fullMessage)}</div>
+          <div class="modal-actions">
+            <button onclick="copyMessageToClipboard('${escapeHtml(
+              fullMessage
+            ).replace(/'/g, "\\'")}')">📋 Salin</button>
+            <button onclick="closeFullMessageModal()">Tutup</button>
+          </div>
+        `;
+
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+
+        // Animate in
+        setTimeout(() => {
+          modalOverlay.classList.add("show");
+        }, 10);
+      }
+
+      /**
+       * Tutup modal pesan lengkap
+       */
+      function closeFullMessageModal() {
+        const modal = document.querySelector(".message-modal-overlay");
+        if (modal) {
+          modal.classList.remove("show");
+          setTimeout(() => {
+            modal.remove();
+          }, 300);
+        }
+      }
+
+      /**
+       * Copy message to clipboard
+       */
+      function copyMessageToClipboard(message) {
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+            // Show temporary success message
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = "✅ Tersalin!";
+            btn.style.background = "#10b981";
+
+            setTimeout(() => {
+              btn.textContent = originalText;
+              btn.style.background = "";
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+            alert("Gagal menyalin pesan");
+          });
+      }
+
+      /**
+       * Export history in specified format
+       */
+      function exportHistory(format) {
+        if (!window.ChatHistoryManager) {
+          alert("History manager tidak tersedia.");
+          return;
+        }
+
+        const currentSessionOnly =
+          document.querySelector('input[name="exportScope"]:checked')?.value ===
+          "session";
+
+        try {
+          switch (format) {
+            case "txt":
+              window.ChatHistoryManager.exportAndDownloadPlainText(
+                currentSessionOnly
+              );
+              break;
+            case "md":
+              window.ChatHistoryManager.exportAndDownloadMarkdown(
+                currentSessionOnly
+              );
+              break;
+            case "pdf":
+              window.ChatHistoryManager.exportToPDF(currentSessionOnly);
+              break;
+            default:
+              console.error("❌ Format ekspor tidak dikenal:", format);
+              alert("Format ekspor tidak valid.");
+          }
+        } catch (error) {
+          console.error("❌ Error saat ekspor:", error);
+          alert("Terjadi kesalahan saat mengekspor histori.");
+        }
+      }
+
+      /**
+       * Clear current session history
+       */
+      function clearSessionHistory() {
+        if (!window.ChatHistoryManager) return;
+
+        const confirmed = confirm(
+          "Yakin ingin menghapus histori percakapan sesi ini? Tindakan ini tidak dapat dibatalkan."
+        );
+
+        if (confirmed) {
+          window.ChatHistoryManager.clearSessionHistory();
+          updateHistoryStats();
+          updateHistoryPreview();
+          alert("Histori sesi ini telah dihapus.");
+        }
+      }
+
+      /**
+       * Clear all history
+       */
+      function clearAllHistory() {
+        if (!window.ChatHistoryManager) return;
+
+        const confirmed = confirm(
+          "Yakin ingin menghapus SEMUA histori percakapan? Tindakan ini tidak dapat dibatalkan dan akan menghapus semua percakapan yang pernah disimpan."
+        );
+
+        if (confirmed) {
+          const doubleConfirm = confirm(
+            "Konfirmasi sekali lagi: Hapus SEMUA histori percakapan?"
+          );
+
+          if (doubleConfirm) {
+            window.ChatHistoryManager.clearHistory();
+            updateHistoryStats();
+            updateHistoryPreview();
+            alert("Semua histori percakapan telah dihapus.");
+          }
+        }
+      }
+
+      // Event listener untuk perubahan scope ekspor
+      document.addEventListener("change", function (e) {
+        if (e.target.name === "exportScope") {
+          updateHistoryPreview();
+        }
+      });
+
+      // Event listeners untuk storage warnings
+      document.addEventListener("storageWarning", function (e) {
+        showStorageWarningNotification(e.detail);
+      });
+
+      // Data Management Functions
+
+      /**
+       * Toggle save status untuk sesi saat ini
+       */
+      function toggleSessionSave() {
+        if (!window.ChatHistoryManager) return;
+
+        const isCurrentlySaved = window.ChatHistoryManager.isSessionSaved();
+        const btn = document.getElementById("saveSessionBtn");
+
+        if (isCurrentlySaved) {
+          // Unsave session
+          if (
+            confirm(
+              "Yakin ingin menghapus status simpan sesi ini? Sesi akan dihapus otomatis saat refresh jika auto-cleanup aktif."
+            )
+          ) {
+            window.ChatHistoryManager.unsaveCurrentSession();
+            btn.textContent = "💾 Simpan Sesi";
+            btn.classList.remove("saved");
+            alert(
+              "✅ Sesi tidak lagi disimpan. Akan dihapus otomatis sesuai pengaturan."
+            );
+          }
+        } else {
+          // Save session
+          window.ChatHistoryManager.saveCurrentSession();
+          btn.textContent = "🔒 Sesi Tersimpan";
+          btn.classList.add("saved");
+          alert("✅ Sesi disimpan! Tidak akan dihapus otomatis.");
+        }
+
+        updateHistoryStats();
+      }
+
+      /**
+       * Update auto cleanup setting
+       */
+      function updateAutoCleanupSetting(enabled) {
+        if (!window.ChatHistoryManager) return;
+
+        window.ChatHistoryManager.updateSetting(
+          "autoCleanupOnRefresh",
+          enabled
+        );
+        window.ChatHistoryManager.updateSetting("enableManualSave", enabled);
+
+        if (enabled) {
+          alert(
+            "⚠️ Auto-cleanup diaktifkan! Histori akan dihapus saat refresh kecuali disimpan manual."
+          );
+        } else {
+          alert(
+            "✅ Auto-cleanup dinonaktifkan. Histori akan tersimpan permanen."
+          );
+        }
+      }
+
+      /**
+       * Update max messages per session
+       */
+      function updateMaxMessages(value) {
+        if (!window.ChatHistoryManager) return;
+
+        const maxMessages = parseInt(value);
+        if (maxMessages >= 10 && maxMessages <= 500) {
+          window.ChatHistoryManager.updateSetting(
+            "maxMessagesPerSession",
+            maxMessages
+          );
+          alert(`✅ Batas pesan per sesi diubah menjadi ${maxMessages}`);
+        }
+      }
+
+      /**
+       * Update retention days
+       */
+      function updateRetentionDays(value) {
+        if (!window.ChatHistoryManager) return;
+
+        const days = parseInt(value);
+        window.ChatHistoryManager.updateSetting("retentionDays", days);
+        alert(`✅ Histori akan disimpan selama ${days} hari`);
+      }
+
+      /**
+       * Show data usage information
+       */
+      function showDataUsageInfo() {
+        if (!window.ChatHistoryManager) return;
+
+        try {
+          const historyData = localStorage.getItem("discussion_chat_history");
+          const settingsData = localStorage.getItem(
+            "discussion_history_settings"
+          );
+
+          const historySize = historyData ? historyData.length : 0;
+          const settingsSize = settingsData ? settingsData.length : 0;
+          const totalSize = historySize + settingsSize;
+
+          const stats = window.ChatHistoryManager.getHistoryStats(false);
+          const settings = window.ChatHistoryManager.settings;
+
+          const info = `
+📊 INFORMASI STORAGE DATA
+
+💾 Ukuran Data:
+• Histori: ${(historySize / 1024).toFixed(2)} KB
+• Pengaturan: ${(settingsSize / 1024).toFixed(2)} KB  
+• Total: ${(totalSize / 1024).toFixed(2)} KB
+
+📈 Statistik Pesan:
+• Total pesan: ${stats.totalMessages}
+• Pesan user: ${stats.userMessages}
+• Pesan bot: ${stats.botMessages}
+• Sesi tersimpan: ${settings.savedSessions.length}
+
+⚙️ Pengaturan Aktif:
+• Auto-cleanup: ${settings.autoCleanupOnRefresh ? "Aktif" : "Nonaktif"}
+• Max pesan/sesi: ${settings.maxMessagesPerSession}
+• Retensi: ${settings.retentionDays} hari
+• Max storage: ${settings.maxStorageMB} MB
+
+📅 Maintenance:
+• Cleanup terakhir: ${
+            settings.lastCleanupDate
+              ? new Date(settings.lastCleanupDate).toLocaleString("id-ID")
+              : "Belum pernah"
+          }
+            `;
+
+          alert(info);
+        } catch (error) {
+          alert("❌ Error mengambil informasi storage: " + error.message);
+        }
+      }
+
+      /**
+       * Perform manual cleanup
+       */
+      function performManualCleanup() {
+        if (!window.ChatHistoryManager) return;
+
+        const confirmed = confirm(`
+🧹 MANUAL CLEANUP
+
+Akan melakukan pembersihan:
+• Hapus pesan lama (>${window.ChatHistoryManager.settings.retentionDays} hari)
+• Terapkan batas pesan per sesi
+• Terapkan batas total pesan
+• Sesi tersimpan akan TETAP ada
+
+Lanjutkan?`);
+
+        if (confirmed) {
+          const beforeCount = window.ChatHistoryManager.getAllHistory().length;
+          window.ChatHistoryManager.performMaintenance();
+          const afterCount = window.ChatHistoryManager.getAllHistory().length;
+          const deletedCount = beforeCount - afterCount;
+
+          alert(
+            `✅ Manual cleanup selesai!\n\nDihapus: ${deletedCount} pesan\nTersisa: ${afterCount} pesan`
+          );
+          updateHistoryStats();
+          updateHistoryPreview();
+        }
+      }
+
+      /**
+       * Show storage warning notification
+       */
+      function showStorageWarningNotification(detail) {
+        const notification = document.createElement("div");
+        notification.className = "storage-warning-notification";
+        notification.innerHTML = `
+            <div class="warning-content">
+              <span class="warning-icon">⚠️</span>
+              <span class="warning-text">${detail.message}</span>
+              <button onclick="this.parentElement.parentElement.remove()" class="warning-close">✕</button>
+            </div>
+          `;
+
+        document.body.appendChild(notification);
+
+        // Auto remove after 10 seconds
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 10000);
+      }
+
+      /**
+       * Initialize data management UI
+       */
+      function initializeDataManagementUI() {
+        if (!window.ChatHistoryManager) return;
+
+        const settings = window.ChatHistoryManager.settings;
+
+        // Update UI elements with current settings
+        const autoCleanupToggle = document.getElementById("autoCleanupToggle");
+        if (autoCleanupToggle) {
+          autoCleanupToggle.checked = settings.autoCleanupOnRefresh;
+        }
+
+        const maxMessagesInput = document.getElementById("maxMessagesInput");
+        if (maxMessagesInput) {
+          maxMessagesInput.value = settings.maxMessagesPerSession;
+        }
+
+        const retentionSelect = document.getElementById("retentionSelect");
+        if (retentionSelect) {
+          retentionSelect.value = settings.retentionDays;
+        }
+
+        // Update save session button
+        updateSaveSessionButton();
+      }
+
+      /**
+       * Update save session button state
+       */
+      function updateSaveSessionButton() {
+        if (!window.ChatHistoryManager) return;
+
+        const btn = document.getElementById("saveSessionBtn");
+        if (btn) {
+          const isCurrentlySaved = window.ChatHistoryManager.isSessionSaved();
+
+          if (isCurrentlySaved) {
+            btn.textContent = "🔒 Sesi Tersimpan";
+            btn.classList.add("saved");
+          } else {
+            btn.textContent = "💾 Simpan Sesi";
+            btn.classList.remove("saved");
+          }
+        }
+      }
+
+      // Make functions globally available
+      window.setStoryTitle = setStoryTitle;
+      window.uploadUserImage = uploadUserImage;
+      window.uploadBotImage = uploadBotImage;
+      window.handleUserImageUpload = handleUserImageUpload;
+      window.handleBotImageUpload = handleBotImageUpload;
+      window.toggleFullscreen = toggleFullscreen;
+      window.toggleHistoryPanel = toggleHistoryPanel;
+      window.exportHistory = exportHistory;
+      window.clearSessionHistory = clearSessionHistory;
+      window.clearAllHistory = clearAllHistory;
+      window.showFullMessageModal = showFullMessageModal;
+      window.closeFullMessageModal = closeFullMessageModal;
+      window.copyMessageToClipboard = copyMessageToClipboard;
+      window.toggleSessionSave = toggleSessionSave;
+      window.updateAutoCleanupSetting = updateAutoCleanupSetting;
+      window.updateMaxMessages = updateMaxMessages;
+      window.updateRetentionDays = updateRetentionDays;
+      window.showDataUsageInfo = showDataUsageInfo;
+      window.performManualCleanup = performManualCleanup;
+
+      // Debug info
+      console.log("💬 Discussion page loaded");
+      console.log("🎯 Available functions:", {
+        setStoryTitle: typeof setStoryTitle,
+        uploadUserImage: typeof uploadUserImage,
+        uploadBotImage: typeof uploadBotImage,
+        toggleFullscreen: typeof toggleFullscreen,
+      });
+    </script>
+  </body>
+</html>

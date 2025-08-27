@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>Bot Settings - Interactive Chatbot</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../browser-compatibility.css" />
+  </head>
+  <body>
+    <div class="chat-container">
+      <!-- Header Chatbot -->
+      <div class="chat-header">
+        <div class="chatbot-icon">
+          <div class="robot-face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+        <h1 class="chat-title" id="chatTitle">⚙️ Bot Settings</h1>
+        <div class="header-actions">
+          <a href="index.html" class="settings-btn" title="Back to Story">
+            🏠
+          </a>
+          <button
+            class="settings-btn"
+            id="settingsBtn"
+            title="Pengaturan Chatbot"
+          >
+            ⚙️
+          </button>
+          <div class="menu-button">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Info Area -->
+      <div class="chat-conversation" id="chatConversation">
+        <!-- Welcome Message -->
+        <div class="message chatbot-message" id="welcomeMessage">
+          <div class="message-bubble">
+            <p id="welcomeText">
+              ⚙️ Selamat datang di halaman pengaturan Bot! Klik tombol
+              pengaturan (⚙️) untuk personalisasi chatbot Anda.
+            </p>
+          </div>
+        </div>
+        <div class="message chatbot-message" id="infoMessage">
+          <div class="message-bubble">
+            <p>
+              🎨 Anda dapat mengubah nama, deskripsi, avatar, dan konfigurasi
+              webhook untuk n8n di sini.
+            </p>
+          </div>
+        </div>
+        <div class="message chatbot-message">
+          <div class="message-bubble">
+            <p>
+              📚 Setelah selesai mengatur, klik 🏠 untuk kembali ke cerita
+              interaktif utama.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Web Component Input -->
+      <chat-input
+        id="chatInput"
+        placeholder="Ketik pesan Anda..."
+        webhook-url="http://localhost:5678/webhook/inputWebhook"
+      >
+      </chat-input>
+    </div>
+
+    <!-- Web Component Output -->
+    <chat-output id="chatOutput"></chat-output>
+
+    <!-- Bot Configuration Component -->
+    <bot-config id="botConfig"></bot-config>
+
+    <!-- Browser Compatibility -->
+    <script src="../js/browser-polyfills.js"></script>
+
+    <!-- Scripts -->
+    <script src="js/config-manager.js"></script>
+    <script src="components/chat-input.js"></script>
+    <script src="components/chat-output.js"></script>
+    <script src="components/bot-config.js"></script>
+    <script src="js/chat-manager.js"></script>
+    <script src="js/main.js"></script>
+    <script src="examples/example-configs.js"></script>
+    <script src="tools/test-config-sharing.js"></script>
+
+    <!-- Initialize App -->
+    <script>
+      // Initialize configuration and setup event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        const configManager = window.ConfigManager;
+        const settingsBtn = document.getElementById("settingsBtn");
+        const botConfig = document.getElementById("botConfig");
+        const chatTitle = document.getElementById("chatTitle");
+        const welcomeText = document.getElementById("welcomeText");
+
+        // Update UI from config
+        function updateUI() {
+          const config = configManager.getConfig();
+
+          // Update title
+          chatTitle.textContent = config.ui.title || `Chat ${config.botName}`;
+
+          // Update welcome message
+          welcomeText.textContent = `Hello! I am ${config.botName}, ${config.botDescription}`;
+
+          // Update document title
+          document.title = `${config.botName} - Interactive Chatbot`;
+        }
+
+        // Settings button click handler
+        settingsBtn.addEventListener("click", function () {
+          botConfig.show();
+        });
+
+        // Listen for config changes
+        document.addEventListener("configChanged", function (event) {
+          updateUI();
+        });
+
+        // Initial UI update
+        updateUI();
+
+        // Add diagnostic info
+        setTimeout(() => {
+          const chatOutput = document.getElementById("chatOutput");
+          if (chatOutput) {
+            const currentConfig = configManager.getConfig();
+            chatOutput.simulateWebhookMessage(
+              `🔧 Bot Settings Page aktif! Config saat ini: ${currentConfig.botName}. Gunakan tools debugging di bawah untuk troubleshooting.`,
+              "System",
+              "ai"
+            );
+          }
+        }, 500);
+      });
+    </script>
+
+    <!-- n8n embedded chatbot - DISABLE untuk menggunakan custom component -->
+    <!--
+    <link
+      href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css"
+      rel="stylesheet"
+    />
+    <script type="module">
+      import { createChat } from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
+
+      createChat({
+        webhookUrl:
+          "http://localhost:5678/webhook/e3ea26c3-38d3-4c06-a9eb-88168286a8fb/chat",
+      });
+    </script>
+    -->
+
+    <!-- Diagnostic Tools Footer -->
+    <footer
+      style="background: #1e293b; color: white; padding: 2rem; margin-top: 2rem"
+    >
+      <div style="max-width: 1200px; margin: 0 auto">
+        <h3 style="margin-bottom: 1rem; color: #e2e8f0">
+          🔧 Diagnostic & Debug Tools
+        </h3>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+          "
+        >
+          <div>
+            <h4 style="color: #fbbf24; margin-bottom: 0.5rem">
+              🔍 Connection Testing
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem">
+              <a
+                href="tools/n8n-diagnostic.html"
+                style="
+                  color: #93c5fd;
+                  text-decoration: none;
+                  padding: 0.5rem;
+                  background: rgba(59, 130, 246, 0.1);
+                  border-radius: 4px;
+                "
+                >🏥 n8n Diagnostic Tool</a
+              >
+              <a
+                href="tools/test-webhook-connection.html"
+                style="
+                  color: #93c5fd;
+                  text-decoration: none;
+                  padding: 0.5rem;
+                  background: rgba(59, 130, 246, 0.1);
+                  border-radius: 4px;
+                "
+                >🔗 Test Webhook Connection</a
+              >
+            </div>
+          </div>
+
+          <div>
+            <h4 style="color: #34d399; margin-bottom: 0.5rem">
+              📚 Documentation
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem">
+              <a
+                href="docs/DEBUG_GUIDE.md"
+                style="
+                  color: #6ee7b7;
+                  text-decoration: none;
+                  padding: 0.5rem;
+                  background: rgba(16, 185, 129, 0.1);
+                  border-radius: 4px;
+                "
+                >📖 Debug Guide</a
+              >
+              <a
+                href="docs/WEBHOOK_TROUBLESHOOTING.md"
+                style="
+                  color: #6ee7b7;
+                  text-decoration: none;
+                  padding: 0.5rem;
+                  background: rgba(16, 185, 129, 0.1);
+                  border-radius: 4px;
+                "
+                >🚨 Webhook Troubleshooting</a
+              >
+              <a
+                href="docs/PERSONALIZATION_GUIDE.md"
+                style="
+                  color: #6ee7b7;
+                  text-decoration: none;
+                  padding: 0.5rem;
+                  background: rgba(16, 185, 129, 0.1);
+                  border-radius: 4px;
+                "
+                >🎨 Personalization Guide</a
+              >
+            </div>
+          </div>
+
+          <div>
+            <h4 style="color: #f472b6; margin-bottom: 0.5rem">
+              ⚡ Quick Actions
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem">
+              <button
+                onclick="window.PersonaManager?.random()"
+                style="
+                  color: #fda4af;
+                  background: rgba(244, 114, 182, 0.1);
+                  border: 1px solid rgba(244, 114, 182, 0.3);
+                  padding: 0.5rem;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+              >
+                🎲 Random Persona
+              </button>
+              <button
+                onclick="localStorage.removeItem('chatbot_config'); location.reload()"
+                style="
+                  color: #fda4af;
+                  background: rgba(244, 114, 182, 0.1);
+                  border: 1px solid rgba(244, 114, 182, 0.3);
+                  padding: 0.5rem;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+              >
+                🔄 Reset Config
+              </button>
+              <button
+                onclick="console.log('Current config:', window.ConfigManager?.getConfig())"
+                style="
+                  color: #fda4af;
+                  background: rgba(244, 114, 182, 0.1);
+                  border: 1px solid rgba(244, 114, 182, 0.3);
+                  padding: 0.5rem;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+              >
+                📊 Log Config
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+          "
+        >
+          <p>🔧 Admin Panel - Bot Configuration & Diagnostic Tools</p>
+          <p>
+            <a href="../index.html" style="color: #60a5fa"
+              >🏠 Back to Interactive Story</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

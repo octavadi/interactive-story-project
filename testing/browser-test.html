@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Compatibility Test</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="browser-compatibility.css" />
+    <style>
+      .test-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+      }
+
+      .test-result {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: bold;
+        margin: 0.25rem;
+      }
+
+      .test-pass {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .test-fail {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .test-warn {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .browser-info {
+        background: #f0f9ff;
+        border: 1px solid #0ea5e9;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .feature-card {
+        padding: 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      .visual-test {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .backdrop-test {
+        background: rgba(255, 255, 255, 0.9);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        border-radius: 8px;
+        color: #333;
+      }
+
+      .grid-test {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .grid-item {
+        background: #3b82f6;
+        color: white;
+        padding: 1rem;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .flex-test {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #10b981;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .transform-test {
+        width: 100px;
+        height: 100px;
+        background: #f59e0b;
+        margin: 1rem auto;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+      }
+
+      .transform-test:hover {
+        transform: rotate(45deg) scale(1.1);
+      }
+
+      .custom-element-test {
+        border: 2px dashed #6b7280;
+        padding: 2rem;
+        text-align: center;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .loading-indicator {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Browser Compatibility -->
+    <script src="js/browser-polyfills.js"></script>
+
+    <div class="test-container">
+      <h1>🔧 Browser Compatibility Test Suite</h1>
+
+      <!-- Browser Info -->
+      <div class="browser-info">
+        <h3>📱 Browser Information</h3>
+        <div id="browserInfo">Detecting browser...</div>
+      </div>
+
+      <!-- JavaScript Features Test -->
+      <div class="test-section">
+        <h3>⚡ JavaScript Features</h3>
+        <div id="jsFeatures" class="feature-grid">
+          <div class="loading-indicator"></div>
+          Testing...
+        </div>
+      </div>
+
+      <!-- CSS Features Test -->
+      <div class="test-section">
+        <h3>🎨 CSS Features</h3>
+        <div id="cssFeatures" class="feature-grid">
+          <div class="loading-indicator"></div>
+          Testing...
+        </div>
+      </div>
+
+      <!-- Visual Tests -->
+      <div class="test-section">
+        <h3>👁️ Visual Rendering Tests</h3>
+
+        <h4>Backdrop Filter Test:</h4>
+        <div class="visual-test">
+          <div class="backdrop-test">
+            📄 This should have a blurred backdrop effect
+          </div>
+        </div>
+
+        <h4>CSS Grid Test:</h4>
+        <div class="grid-test">
+          <div class="grid-item">Grid 1</div>
+          <div class="grid-item">Grid 2</div>
+          <div class="grid-item">Grid 3</div>
+        </div>
+
+        <h4>Flexbox Test:</h4>
+        <div class="flex-test">
+          <div>Left Item</div>
+          <div>Center Item</div>
+          <div>Right Item</div>
+        </div>
+
+        <h4>Transform Test (Hover Me):</h4>
+        <div class="transform-test">🔄 HOVER</div>
+      </div>
+
+      <!-- Web Components Test -->
+      <div class="test-section">
+        <h3>🔧 Web Components Test</h3>
+        <div class="custom-element-test">
+          <div id="webComponentTest">
+            <div class="loading-indicator"></div>
+            Testing web components...
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Test -->
+      <div class="test-section">
+        <h3>⚡ Performance Test</h3>
+        <div id="performanceTest">
+          <button onclick="runPerformanceTest()">
+            🚀 Run Performance Test
+          </button>
+          <div id="performanceResults"></div>
+        </div>
+      </div>
+
+      <!-- Integration Test -->
+      <div class="test-section">
+        <h3>🔗 Integration Test</h3>
+        <div id="integrationTest">
+          <button onclick="runIntegrationTest()">
+            🧪 Test Chat Components
+          </button>
+          <div id="integrationResults"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="text-align: center; margin-top: 2rem">
+        <button
+          onclick="location.href='index.html'"
+          style="
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            cursor: pointer;
+          "
+        >
+          📚 Go to Main Story
+        </button>
+        <button
+          onclick="location.href='botSetting.html'"
+          style="
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            cursor: pointer;
+          "
+        >
+          ⚙️ Go to Bot Settings
+        </button>
+        <button
+          onclick="exportTestResults()"
+          style="
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            cursor: pointer;
+          "
+        >
+          📥 Export Test Results
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Components for Testing -->
+    <div style="display: none">
+      <chat-input id="testChatInput" placeholder="Test input..."></chat-input>
+      <chat-output id="testChatOutput"></chat-output>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config-manager.js"></script>
+    <script src="components/chat-input.js"></script>
+    <script src="components/chat-output.js"></script>
+
+    <script>
+      // Test Suite Implementation
+      let testResults = {
+        browser: {},
+        javascript: {},
+        css: {},
+        webComponents: {},
+        performance: {},
+        integration: {},
+      };
+
+      function detectBrowser() {
+        const ua = navigator.userAgent;
+        const browser = {
+          name: "Unknown",
+          version: "Unknown",
+          engine: "Unknown",
+          platform: navigator.platform,
+          userAgent: ua,
+        };
+
+        if (ua.indexOf("Chrome") > -1 && ua.indexOf("Edge") === -1) {
+          browser.name = "Chrome";
+          browser.engine = "Blink";
+          browser.version = ua.match(/Chrome\/([0-9.]+)/)?.[1] || "Unknown";
+        } else if (ua.indexOf("Safari") > -1 && ua.indexOf("Chrome") === -1) {
+          browser.name = "Safari";
+          browser.engine = "WebKit";
+          browser.version = ua.match(/Version\/([0-9.]+)/)?.[1] || "Unknown";
+        } else if (ua.indexOf("Edge") > -1) {
+          browser.name = "Edge";
+          browser.engine = "EdgeHTML/Blink";
+          browser.version = ua.match(/Edge\/([0-9.]+)/)?.[1] || "Unknown";
+        } else if (ua.indexOf("Firefox") > -1) {
+          browser.name = "Firefox";
+          browser.engine = "Gecko";
+          browser.version = ua.match(/Firefox\/([0-9.]+)/)?.[1] || "Unknown";
+        }
+
+        return browser;
+      }
+
+      function testJavaScriptFeatures() {
+        const features = {
+          "ES6 Classes": typeof class {} === "function",
+          "Arrow Functions": (() => true)(),
+          "Template Literals": `test` === "test",
+          Destructuring: (() => {
+            try {
+              const { a } = { a: 1 };
+              return a === 1;
+            } catch (e) {
+              return false;
+            }
+          })(),
+          Promises: typeof Promise !== "undefined",
+          "Async/Await": (async () => true) instanceof Promise,
+          "Fetch API": typeof fetch !== "undefined",
+          "Local Storage": typeof localStorage !== "undefined",
+          "Custom Elements": typeof customElements !== "undefined",
+          "Shadow DOM": typeof Element.prototype.attachShadow !== "undefined",
+        };
+
+        return features;
+      }
+
+      function testCSSFeatures() {
+        const features = {};
+
+        // Test CSS support
+        const testEl = document.createElement("div");
+        document.body.appendChild(testEl);
+
+        const tests = {
+          "CSS Grid": () => {
+            testEl.style.display = "grid";
+            return getComputedStyle(testEl).display === "grid";
+          },
+          Flexbox: () => {
+            testEl.style.display = "flex";
+            return getComputedStyle(testEl).display === "flex";
+          },
+          "CSS Custom Properties": () => {
+            return window.CSS && CSS.supports && CSS.supports("(--test: 0)");
+          },
+          "Backdrop Filter": () => {
+            return (
+              CSS.supports("backdrop-filter", "blur(10px)") ||
+              CSS.supports("-webkit-backdrop-filter", "blur(10px)")
+            );
+          },
+          "CSS Transforms": () => {
+            return CSS.supports("transform", "rotate(45deg)");
+          },
+          "CSS Transitions": () => {
+            return CSS.supports("transition", "all 0.3s ease");
+          },
+          "CSS Animations": () => {
+            return CSS.supports("animation", "spin 1s linear infinite");
+          },
+        };
+
+        Object.keys(tests).forEach((test) => {
+          try {
+            features[test] = tests[test]();
+          } catch (e) {
+            features[test] = false;
+          }
+        });
+
+        document.body.removeChild(testEl);
+        return features;
+      }
+
+      function testWebComponents() {
+        const results = {
+          "Custom Elements Defined":
+            typeof customElements.define === "function",
+          "Shadow DOM Available":
+            typeof Element.prototype.attachShadow === "function",
+          "Chat Input Component": !!document.querySelector("#testChatInput"),
+          "Chat Output Component": !!document.querySelector("#testChatOutput"),
+        };
+
+        // Test if our components actually work
+        setTimeout(() => {
+          const chatInput = document.querySelector("#testChatInput");
+          const chatOutput = document.querySelector("#testChatOutput");
+
+          if (chatInput && typeof chatInput.getBotName === "function") {
+            results["Chat Input Methods"] = true;
+          } else {
+            results["Chat Input Methods"] = false;
+          }
+
+          if (chatOutput && typeof chatOutput.getBotName === "function") {
+            results["Chat Output Methods"] = true;
+          } else {
+            results["Chat Output Methods"] = false;
+          }
+
+          updateTestDisplay();
+        }, 1000);
+
+        return results;
+      }
+
+      function runPerformanceTest() {
+        const startTime = performance.now();
+
+        // DOM manipulation test
+        const testContainer = document.createElement("div");
+        for (let i = 0; i < 1000; i++) {
+          const el = document.createElement("div");
+          el.textContent = `Element ${i}`;
+          testContainer.appendChild(el);
+        }
+
+        const domTime = performance.now() - startTime;
+
+        // JSON parsing test
+        const jsonStart = performance.now();
+        const testObj = {
+          test: "data",
+          numbers: Array.from({ length: 1000 }, (_, i) => i),
+        };
+        const jsonString = JSON.stringify(testObj);
+        const parsed = JSON.parse(jsonString);
+        const jsonTime = performance.now() - jsonStart;
+
+        // LocalStorage test
+        const storageStart = performance.now();
+        localStorage.setItem("perfTest", jsonString);
+        const retrieved = localStorage.getItem("perfTest");
+        localStorage.removeItem("perfTest");
+        const storageTime = performance.now() - storageStart;
+
+        const results = {
+          "DOM Manipulation (1000 elements)": `${domTime.toFixed(2)}ms`,
+          "JSON Operations": `${jsonTime.toFixed(2)}ms`,
+          "LocalStorage Operations": `${storageTime.toFixed(2)}ms`,
+          "Overall Performance":
+            domTime < 100 && jsonTime < 10 && storageTime < 10
+              ? "Good"
+              : "Needs Optimization",
+        };
+
+        testResults.performance = results;
+
+        document.getElementById("performanceResults").innerHTML = Object.keys(
+          results
+        )
+          .map(
+            (key) =>
+              `<div class="test-result ${
+                results[key] === "Good" ? "test-pass" : "test-warn"
+              }">${key}: ${results[key]}</div>`
+          )
+          .join("");
+      }
+
+      function runIntegrationTest() {
+        const results = {};
+
+        // Test ConfigManager
+        if (window.ConfigManager) {
+          results["ConfigManager Available"] = true;
+
+          try {
+            const config = window.ConfigManager.getConfig();
+            results["Config Loading"] = !!config.botName;
+          } catch (e) {
+            results["Config Loading"] = false;
+          }
+        } else {
+          results["ConfigManager Available"] = false;
+          results["Config Loading"] = false;
+        }
+
+        // Test Chat Components Integration
+        const chatInput = document.querySelector("#testChatInput");
+        const chatOutput = document.querySelector("#testChatOutput");
+
+        if (chatInput) {
+          results["Chat Input Element"] = true;
+          results["Chat Input ConfigManager"] = !!chatInput.configManager;
+        } else {
+          results["Chat Input Element"] = false;
+          results["Chat Input ConfigManager"] = false;
+        }
+
+        if (chatOutput) {
+          results["Chat Output Element"] = true;
+          results["Chat Output ConfigManager"] = !!chatOutput.configManager;
+        } else {
+          results["Chat Output Element"] = false;
+          results["Chat Output ConfigManager"] = false;
+        }
+
+        testResults.integration = results;
+
+        document.getElementById("integrationResults").innerHTML = Object.keys(
+          results
+        )
+          .map(
+            (key) =>
+              `<div class="test-result ${
+                results[key] ? "test-pass" : "test-fail"
+              }">${key}: ${results[key] ? "✅" : "❌"}</div>`
+          )
+          .join("");
+      }
+
+      function createTestResult(name, result) {
+        const className =
+          result === true
+            ? "test-pass"
+            : result === false
+            ? "test-fail"
+            : "test-warn";
+        const icon = result === true ? "✅" : result === false ? "❌" : "⚠️";
+        return `<div class="feature-card"><div class="test-result ${className}">${name}: ${icon}</div></div>`;
+      }
+
+      function updateTestDisplay() {
+        // Update browser info
+        document.getElementById("browserInfo").innerHTML = `
+                <strong>🌐 ${testResults.browser.name} ${testResults.browser.version}</strong><br>
+                Engine: ${testResults.browser.engine}<br>
+                Platform: ${testResults.browser.platform}
+            `;
+
+        // Update JavaScript features
+        document.getElementById("jsFeatures").innerHTML = Object.keys(
+          testResults.javascript
+        )
+          .map((feature) =>
+            createTestResult(feature, testResults.javascript[feature])
+          )
+          .join("");
+
+        // Update CSS features
+        document.getElementById("cssFeatures").innerHTML = Object.keys(
+          testResults.css
+        )
+          .map((feature) => createTestResult(feature, testResults.css[feature]))
+          .join("");
+
+        // Update Web Components
+        document.getElementById("webComponentTest").innerHTML = Object.keys(
+          testResults.webComponents
+        )
+          .map((feature) =>
+            createTestResult(feature, testResults.webComponents[feature])
+          )
+          .join("");
+      }
+
+      function exportTestResults() {
+        const exportData = {
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          ...testResults,
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `browser-test-${testResults.browser.name}-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Run tests on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        testResults.browser = detectBrowser();
+        testResults.javascript = testJavaScriptFeatures();
+        testResults.css = testCSSFeatures();
+        testResults.webComponents = testWebComponents();
+
+        updateTestDisplay();
+
+        console.log("🧪 Browser compatibility test completed:", testResults);
+      });
+    </script>
+  </body>
+</html>

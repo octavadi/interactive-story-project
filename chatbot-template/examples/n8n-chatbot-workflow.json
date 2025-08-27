@@ -1,0 +1,68 @@
+{
+  "name": "Chatbot Webhook Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-input",
+        "options": {
+          "responseMode": "responseNode"
+        }
+      },
+      "id": "webhook-node-id",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [400, 300],
+      "webhookId": "webhook-node-id"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process message from chatbot and generate AI response\nconst inputData = $input.first().json;\nconst userMessage = inputData.chatInput || 'No message provided';\nconst userId = inputData.userId || 'anonymous';\nconst sessionId = inputData.sessionId || 'no-session';\nconst timestamp = inputData.timestamp || new Date().toISOString();\n\nconsole.log('Processing chatbot message:', {\n  userMessage,\n  userId,\n  sessionId,\n  timestamp\n});\n\n// Enhanced AI response logic\nlet aiResponse = '';\n\n// Normalize message for matching\nconst msg = userMessage.toLowerCase().trim();\n\n// Greeting responses\nif (msg.includes('hello') || msg.includes('halo') || msg.includes('hi') || msg.includes('hai')) {\n  aiResponse = 'Halo! Selamat datang di layanan chat kami. Saya di sini untuk membantu Anda. Apa yang bisa saya bantu hari ini?';\n} \n// Service inquiry\nelse if (msg.includes('layanan') || msg.includes('service') || msg.includes('bantuan') || msg.includes('help')) {\n  aiResponse = 'Kami menyediakan berbagai layanan teknologi meliputi:\\n\\n• Pengembangan Website & Mobile App\\n• Konsultasi IT dan Digital Transformation\\n• Cloud Solutions & DevOps\\n• UI/UX Design\\n• Maintenance & Support\\n\\nLayanan mana yang ingin Anda ketahui lebih detail?';\n} \n// Pricing inquiry\nelse if (msg.includes('harga') || msg.includes('price') || msg.includes('biaya') || msg.includes('cost') || msg.includes('tarif')) {\n  aiResponse = 'Harga layanan kami disesuaikan dengan kompleksitas dan kebutuhan spesifik project Anda. Beberapa faktor yang mempengaruhi:\\n\\n• Scope dan kompleksitas project\\n• Timeline pengerjaan\\n• Teknologi yang digunakan\\n• Fitur dan fungsionalitas\\n\\nUntuk mendapatkan estimasi yang akurat, bisa Anda ceritakan detail project yang direncanakan?';\n} \n// Contact and info\nelse if (msg.includes('kontak') || msg.includes('contact') || msg.includes('hubungi') || msg.includes('telepon') || msg.includes('email')) {\n  aiResponse = 'Anda bisa menghubungi kami melalui:\\n\\n📧 Email: info@company.com\\n📱 WhatsApp: +62 812-3456-7890\\n🏢 Office: Jakarta, Indonesia\\n🕒 Jam Kerja: Senin-Jumat, 09:00-17:00 WIB\\n\\nAtau lanjutkan chat di sini, saya siap membantu!';\n} \n// Thank you response\nelse if (msg.includes('terima kasih') || msg.includes('thank') || msg.includes('thanks') || msg.includes('makasih')) {\n  aiResponse = 'Sama-sama! Senang bisa membantu Anda. Jika ada pertanyaan lain atau butuh bantuan lebih lanjut, jangan ragu untuk bertanya ya! 😊';\n} \n// About company\nelse if (msg.includes('tentang') || msg.includes('about') || msg.includes('profil') || msg.includes('company')) {\n  aiResponse = 'Kami adalah perusahaan teknologi yang berfokus pada solusi digital inovatif. Dengan pengalaman bertahun-tahun, kami telah membantu berbagai klien dari startup hingga enterprise dalam transformasi digital mereka.\\n\\nVisi kami adalah menjadi partner terpercaya dalam perjalanan digitalisasi bisnis Anda.';\n} \n// Default response\nelse {\n  aiResponse = `Terima kasih atas pesan Anda: \"${userMessage}\"\\n\\nSaya akan dengan senang hati membantu menjawab pertanyaan atau memberikan informasi yang Anda butuhkan. Bisa Anda jelaskan lebih spesifik apa yang ingin Anda ketahui?\\n\\nAtau ketik salah satu topik berikut:\\n• Layanan\\n• Harga\\n• Kontak\\n• Tentang kami`;\n}\n\nconsole.log('Generated AI response:', aiResponse);\n\n// PENTING: Return hanya string message untuk menghindari [object Object]\n// Apps akan membaca response ini langsung sebagai text\nreturn aiResponse;"
+      },
+      "id": "ai-processor-id",
+      "name": "AI Response Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"message\": $json } }}"
+      },
+      "id": "response-node-id",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [840, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Response Generator": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null
+}

@@ -1,0 +1,405 @@
+/**
+ * Browser Compatibility Enhancements
+ * Cross-browser fixes untuk Chrome, Safari, dan Edge
+ */
+
+/* ===========================================
+   VENDOR PREFIXES & FALLBACKS
+   =========================================== */
+
+/* Backdrop filter untuk Safari */
+.scene-header,
+.content-card,
+.chat-section,
+.scene-footer,
+.config-modal {
+  /* Webkit prefix untuk Safari 9+ */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  /* Fallback untuk browser yang tidak support backdrop-filter */
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Grid layout fallback untuk IE/Edge Legacy */
+.scene-media {
+  display: -ms-grid; /* IE/Edge 12-15 */
+  display: grid;
+  -ms-grid-columns: 1fr 2rem 1fr; /* IE/Edge spacing */
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* IE/Edge grid items positioning */
+.scene-image-container {
+  -ms-grid-column: 1;
+}
+
+.scene-text-container {
+  -ms-grid-column: 3;
+}
+
+/* Flexbox prefixes untuk Safari 8 */
+.header-content,
+.scene-nav,
+.chat-header-section,
+.footer-content {
+  display: -webkit-box; /* Safari 6.1+, iOS 7.1+ */
+  display: -ms-flexbox; /* IE 10 */
+  display: -webkit-flex; /* Chrome 21-28 */
+  display: flex; /* Modern browsers */
+
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+/* Transform prefixes */
+.settings-btn:hover,
+.nav-btn:hover {
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.settings-btn:active {
+  -webkit-transform: rotate(45deg) scale(0.95);
+  -ms-transform: rotate(45deg) scale(0.95);
+  transform: rotate(45deg) scale(0.95);
+}
+
+/* Transition prefixes */
+.nav-btn,
+.settings-btn,
+.form-input,
+.btn {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Animation prefixes */
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+.content-card {
+  -webkit-animation: fadeInUp 0.6s ease-out;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* ===========================================
+   SAFARI SPECIFIC FIXES
+   =========================================== */
+
+/* Safari input styling */
+.message-input,
+.form-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md, 8px);
+}
+
+/* Safari button styling */
+.btn,
+.nav-btn,
+.settings-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Safari scrollbar styling */
+.chat-conversation,
+.output-container {
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+}
+
+/* Safari sticky positioning fallback */
+.scene-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+/* ===========================================
+   EDGE SPECIFIC FIXES
+   =========================================== */
+
+/* Edge CSS Grid minmax fallback */
+@supports not (grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))) {
+  .footer-content {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  .footer-section {
+    -ms-flex: 1 1 250px;
+    flex: 1 1 250px;
+  }
+}
+
+/* Edge custom properties fallback */
+@supports not (--primary-color: #3b82f6) {
+  .nav-btn {
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+
+  .nav-btn:hover {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+  }
+}
+
+/* ===========================================
+   WEB COMPONENTS COMPATIBILITY
+   =========================================== */
+
+/* Ensure custom elements display properly */
+chat-input,
+chat-output,
+bot-config {
+  display: block;
+}
+
+/* Shadow DOM fallback untuk older browsers */
+@supports not (attachShadow: true) {
+  chat-input,
+  chat-output {
+    /* Fallback styling jika Shadow DOM tidak tersedia */
+    border: 1px solid var(--border-primary, #e2e8f0);
+    border-radius: var(--radius-md, 8px);
+    padding: 1rem;
+    background: var(--bg-primary, #ffffff);
+  }
+}
+
+/* ===========================================
+   JAVASCRIPT FEATURE DETECTION STYLES
+   =========================================== */
+
+/* No JS fallback */
+.no-js .config-overlay {
+  display: none !important;
+}
+
+.no-js .chat-components::before {
+  content: "⚠️ JavaScript diperlukan untuk fungsi chat. Silakan aktifkan JavaScript di browser Anda.";
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* ===========================================
+   MOBILE & TOUCH OPTIMIZATION
+   =========================================== */
+
+/* Touch target optimization */
+@media (hover: none) and (pointer: coarse) {
+  .nav-btn,
+  .settings-btn,
+  .btn {
+    min-height: 44px; /* iOS minimum touch target */
+    min-width: 44px;
+  }
+
+  .scene-image-container {
+    min-height: 200px; /* Larger touch area */
+  }
+}
+
+/* Prevent zoom on input focus (iOS Safari) */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .message-input,
+  .form-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* ===========================================
+   HIGH CONTRAST MODE SUPPORT
+   =========================================== */
+
+@media (prefers-contrast: high) {
+  .nav-btn,
+  .btn {
+    border-width: 2px;
+  }
+
+  .content-card,
+  .chat-section {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ===========================================
+   REDUCED MOTION SUPPORT
+   =========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .content-card {
+    animation: none;
+  }
+
+  .settings-btn:hover {
+    transform: none;
+  }
+}
+
+/* ===========================================
+   PRINT STYLES
+   =========================================== */
+
+@media print {
+  .scene-header,
+  .scene-footer,
+  .chat-section,
+  .nav-btn,
+  .settings-btn {
+    display: none !important;
+  }
+
+  .content-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .scene-story-text {
+    page-break-inside: avoid;
+  }
+}
+
+/* ===========================================
+   LEGACY BROWSER FALLBACKS
+   =========================================== */
+
+/* CSS Grid fallback untuk IE11 */
+@media screen and (-ms-high-contrast: active),
+  screen and (-ms-high-contrast: none) {
+  .scene-media {
+    display: block;
+  }
+
+  .scene-image-container,
+  .scene-text-container {
+    width: 48%;
+    float: left;
+    margin-right: 2%;
+  }
+
+  .scene-text-container {
+    margin-right: 0;
+  }
+}
+
+/* Flexbox fallback untuk IE9-10 */
+.ie-fallback .header-content {
+  display: table;
+  width: 100%;
+}
+
+.ie-fallback .scene-title,
+.ie-fallback .scene-nav {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* ===========================================
+   PERFORMANCE OPTIMIZATIONS
+   =========================================== */
+
+/* GPU acceleration untuk smooth animations */
+.content-card,
+.nav-btn,
+.settings-btn {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Optimize image rendering */
+.scene-image {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* ===========================================
+   ACCESSIBILITY ENHANCEMENTS
+   =========================================== */
+
+/* Focus indicators */
+.nav-btn:focus,
+.settings-btn:focus,
+.btn:focus,
+.form-input:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

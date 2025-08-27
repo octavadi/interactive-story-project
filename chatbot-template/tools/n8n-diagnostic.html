@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>n8n Diagnostic Tool</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fafafa;
+      }
+      .section h3 {
+        margin-top: 0;
+        color: #444;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        background: #007cba;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 5px;
+      }
+      button:hover {
+        background: #005a87;
+      }
+      button.danger {
+        background: #dc3545;
+      }
+      button.danger:hover {
+        background: #c82333;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
+      .info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+      }
+      .warning {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+      }
+      .webhook-url {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        font-family: monospace;
+        margin: 10px 0;
+      }
+      .button-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .status-online {
+        background: #28a745;
+      }
+      .status-offline {
+        background: #dc3545;
+      }
+      .status-unknown {
+        background: #ffc107;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 n8n Diagnostic Tool</h1>
+
+      <!-- Status n8n Server -->
+      <div class="section">
+        <h3>
+          <span
+            id="serverStatus"
+            class="status-indicator status-unknown"
+          ></span>
+          Status n8n Server
+        </h3>
+        <p>
+          Mengecek apakah n8n server berjalan di localhost:5678 dan dapat
+          diakses.
+        </p>
+        <div class="button-group">
+          <button onclick="checkN8nServer()">Check n8n Server</button>
+          <button onclick="getN8nHealth()">Get Health Status</button>
+          <button onclick="getN8nWorkflows()">List Workflows</button>
+        </div>
+        <div id="serverResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Test Webhook URLs -->
+      <div class="section">
+        <h3>🔗 Test Webhook URLs</h3>
+        <p>Test berbagai variasi URL webhook untuk menemukan yang benar.</p>
+
+        <label>Base URL n8n:</label>
+        <input
+          type="text"
+          id="baseUrl"
+          value="http://localhost:5678"
+          placeholder="http://localhost:5678"
+        />
+
+        <label>Test berbagai path webhook:</label>
+        <div class="button-group">
+          <button onclick="testWebhookPath('/webhook/test')">
+            /webhook/test
+          </button>
+          <button onclick="testWebhookPath('/webhook/inputWebhook')">
+            /webhook/inputWebhook
+          </button>
+          <button onclick="testWebhookPath('/webhook-test/test')">
+            /webhook-test/test
+          </button>
+          <button onclick="testWebhookPath('/webhook')">
+            /webhook (generic)
+          </button>
+        </div>
+
+        <label>Custom webhook path:</label>
+        <div style="display: flex; gap: 10px">
+          <input
+            type="text"
+            id="customPath"
+            placeholder="/webhook/your-webhook-id"
+            style="flex: 1"
+          />
+          <button onclick="testCustomWebhook()">Test Custom</button>
+        </div>
+
+        <div id="webhookResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Workflow Information -->
+      <div class="section">
+        <h3>📋 Workflow Information</h3>
+        <p>
+          Informasi untuk membuat dan mengkonfigurasi webhook di n8n dengan
+          benar.
+        </p>
+
+        <div class="webhook-url">
+          <strong>URL yang harus dikonfigurasi di aplikasi:</strong><br />
+          <span id="correctWebhookUrl">Tunggu diagnosis...</span>
+        </div>
+
+        <div class="button-group">
+          <button onclick="generateWorkflowJson()">
+            Generate Workflow JSON
+          </button>
+          <button onclick="showWebhookInstructions()">
+            Show Setup Instructions
+          </button>
+        </div>
+
+        <div id="workflowResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Test Chatbot Integration -->
+      <div class="section">
+        <h3>🤖 Test Chatbot Integration</h3>
+        <p>Test integrasi langsung dengan komponen chatbot.</p>
+
+        <label>Message untuk test:</label>
+        <textarea
+          id="testMessage"
+          rows="3"
+          placeholder="Hello, ini adalah test message"
+        >
+Hello dari diagnostic tool!</textarea
+        >
+
+        <div class="button-group">
+          <button onclick="testChatbotWebhook()">Test Chatbot Webhook</button>
+          <button onclick="simulateChatbotFlow()">Simulate Full Flow</button>
+          <button class="danger" onclick="clearChatbotData()">
+            Clear Chat Data
+          </button>
+        </div>
+
+        <div id="chatbotResult" class="result" style="display: none"></div>
+      </div>
+    </div>
+
+    <script>
+      let discoveredWebhookUrl = null;
+
+      // Check n8n server status
+      async function checkN8nServer() {
+        const resultDiv = document.getElementById("serverResult");
+        const statusIndicator = document.getElementById("serverStatus");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = "Checking n8n server...";
+        resultDiv.className = "result info";
+
+        try {
+          const baseUrl = document.getElementById("baseUrl").value;
+          const response = await fetch(`${baseUrl}/rest/login`, {
+            method: "GET",
+            mode: "cors",
+          });
+
+          if (response.status === 401 || response.status === 200) {
+            statusIndicator.className = "status-indicator status-online";
+            resultDiv.className = "result success";
+            resultDiv.textContent = `✅ n8n Server ONLINE
+Status: ${response.status}
+URL: ${baseUrl}
+Time: ${new Date().toLocaleTimeString()}`;
+            return true;
+          } else {
+            throw new Error(`Unexpected status: ${response.status}`);
+          }
+        } catch (error) {
+          statusIndicator.className = "status-indicator status-offline";
+          resultDiv.className = "result error";
+          resultDiv.textContent = `❌ n8n Server OFFLINE
+Error: ${error.message}
+
+Troubleshooting:
+1. Pastikan n8n dijalankan dengan: npx n8n start
+2. Check apakah port 5678 tidak digunakan aplikasi lain
+3. Coba akses ${baseUrl} di browser`;
+          return false;
+        }
+      }
+
+      // Get n8n health status
+      async function getN8nHealth() {
+        const resultDiv = document.getElementById("serverResult");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = "Getting health status...";
+        resultDiv.className = "result info";
+
+        try {
+          const baseUrl = document.getElementById("baseUrl").value;
+          const response = await fetch(`${baseUrl}/healthz`, {
+            method: "GET",
+            mode: "cors",
+          });
+
+          const text = await response.text();
+          resultDiv.className = "result success";
+          resultDiv.textContent = `Health Status:
+Status: ${response.status}
+Response: ${text}
+Headers: ${JSON.stringify(
+            Object.fromEntries(response.headers.entries()),
+            null,
+            2
+          )}`;
+        } catch (error) {
+          resultDiv.className = "result error";
+          resultDiv.textContent = `Error getting health status:
+${error.message}`;
+        }
+      }
+
+      // List workflows
+      async function getN8nWorkflows() {
+        const resultDiv = document.getElementById("serverResult");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = "Getting workflows...";
+        resultDiv.className = "result info";
+
+        try {
+          const baseUrl = document.getElementById("baseUrl").value;
+          const response = await fetch(`${baseUrl}/rest/workflows`, {
+            method: "GET",
+            mode: "cors",
+          });
+
+          if (response.ok) {
+            const workflows = await response.json();
+            resultDiv.className = "result success";
+            resultDiv.textContent = `Workflows found: ${
+              workflows.data?.length || 0
+            }
+
+${JSON.stringify(workflows, null, 2)}`;
+          } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+        } catch (error) {
+          resultDiv.className = "result error";
+          resultDiv.textContent = `Error getting workflows:
+${error.message}
+
+Note: Ini normal jika n8n memerlukan authentication.
+Webhooks biasanya tidak memerlukan auth untuk public access.`;
+        }
+      }
+
+      // Test webhook path
+      async function testWebhookPath(path) {
+        const resultDiv = document.getElementById("webhookResult");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = `Testing webhook path: ${path}`;
+        resultDiv.className = "result info";
+
+        const baseUrl = document.getElementById("baseUrl").value;
+        const fullUrl = baseUrl + path;
+
+        try {
+          // Test with POST request (correct method)
+          const payload = {
+            message: "Test from diagnostic tool",
+            timestamp: new Date().toISOString(),
+            userId: "diagnostic-test",
+            sessionId: "diag-session",
+          };
+
+          const response = await fetch(fullUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const responseText = await response.text();
+
+          if (response.ok) {
+            discoveredWebhookUrl = fullUrl;
+            document.getElementById("correctWebhookUrl").textContent = fullUrl;
+            resultDiv.className = "result success";
+            resultDiv.textContent = `✅ WEBHOOK FOUND: ${path}
+URL: ${fullUrl}
+Status: ${response.status}
+Response: ${responseText}
+
+Payload sent:
+${JSON.stringify(payload, null, 2)}`;
+          } else if (response.status === 404) {
+            resultDiv.className = "result error";
+            resultDiv.textContent = `❌ Webhook NOT FOUND: ${path}
+URL: ${fullUrl}
+Status: 404 - Webhook tidak terdaftar
+
+Kemungkinan penyebab:
+1. Webhook belum dibuat di n8n
+2. Workflow tidak aktif
+3. Path webhook salah`;
+          } else {
+            resultDiv.className = "result warning";
+            resultDiv.textContent = `⚠️ Webhook response: ${path}
+URL: ${fullUrl}
+Status: ${response.status}
+Response: ${responseText}
+
+Ini mungkin webhook yang valid tapi ada error di workflow.`;
+          }
+        } catch (error) {
+          resultDiv.className = "result error";
+          resultDiv.textContent = `❌ Error testing ${path}:
+${error.message}
+
+URL: ${fullUrl}`;
+        }
+      }
+
+      // Test custom webhook
+      async function testCustomWebhook() {
+        const customPath = document.getElementById("customPath").value;
+        if (!customPath) {
+          alert("Masukkan custom webhook path");
+          return;
+        }
+        await testWebhookPath(customPath);
+      }
+
+      // Generate workflow JSON
+      function generateWorkflowJson() {
+        const resultDiv = document.getElementById("workflowResult");
+        resultDiv.style.display = "block";
+        resultDiv.className = "result info";
+
+        const webhookPath = "/inputWebhook"; // Default path
+        const workflowJson = {
+          meta: {
+            instanceId: "chatbot-workflow-" + Date.now(),
+          },
+          nodes: [
+            {
+              parameters: {
+                httpMethod: "POST",
+                path: webhookPath.replace("/", ""),
+                options: {
+                  responseMode: "responseNode",
+                },
+              },
+              id: "webhook-input",
+              name: "Webhook Input",
+              type: "n8n-nodes-base.webhook",
+              typeVersion: 1,
+              position: [240, 300],
+              webhookId: "chatbot-input-webhook",
+            },
+            {
+              parameters: {
+                jsCode: `// Process message from chatbot
+const userMessage = $input.first().json.message || 'No message';
+const userId = $input.first().json.userId || 'anonymous';
+const sessionId = $input.first().json.sessionId || 'no-session';
+
+// Simple AI response logic
+let aiResponse = '';
+
+if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('halo')) {
+  aiResponse = 'Halo! Selamat datang. Bagaimana saya bisa membantu Anda hari ini?';
+} else if (userMessage.toLowerCase().includes('layanan') || userMessage.toLowerCase().includes('service')) {
+  aiResponse = 'Kami menyediakan berbagai layanan IT termasuk web development, mobile apps, dan konsultasi teknologi. Apa yang bisa kami bantu?';
+} else if (userMessage.toLowerCase().includes('harga') || userMessage.toLowerCase().includes('price') || userMessage.toLowerCase().includes('cost')) {
+  aiResponse = 'Harga layanan bervariasi tergantung kompleksitas project. Silakan ceritakan kebutuhan Anda untuk estimasi yang akurat.';
+} else if (userMessage.toLowerCase().includes('terima kasih') || userMessage.toLowerCase().includes('thank')) {
+  aiResponse = 'Sama-sama! Senang bisa membantu. Ada yang bisa saya bantu lagi?';
+} else {
+  aiResponse = \`Terima kasih atas pesan Anda: "\${userMessage}". Tim kami akan segera merespon dan memberikan informasi yang Anda butuhkan.\`;
+}
+
+return {
+  response: {
+    message: aiResponse,
+    timestamp: new Date().toISOString(),
+    userId: userId,
+    sessionId: sessionId,
+    type: 'ai_response'
+  },
+  userInput: {
+    message: userMessage,
+    userId: userId,
+    sessionId: sessionId,
+    timestamp: $input.first().json.timestamp
+  }
+};`,
+              },
+              id: "process-message",
+              name: "Process Message",
+              type: "n8n-nodes-base.code",
+              typeVersion: 2,
+              position: [460, 300],
+            },
+            {
+              parameters: {
+                respondWith: "json",
+                responseBody: "={{ $json.response }}",
+              },
+              id: "webhook-response",
+              name: "Webhook Response",
+              type: "n8n-nodes-base.respondToWebhook",
+              typeVersion: 1,
+              position: [680, 300],
+            },
+          ],
+          connections: {
+            "Webhook Input": {
+              main: [
+                [
+                  {
+                    node: "Process Message",
+                    type: "main",
+                    index: 0,
+                  },
+                ],
+              ],
+            },
+            "Process Message": {
+              main: [
+                [
+                  {
+                    node: "Webhook Response",
+                    type: "main",
+                    index: 0,
+                  },
+                ],
+              ],
+            },
+          },
+          active: false,
+          settings: {
+            executionOrder: "v1",
+          },
+          versionId: "1",
+          id: "chatbot-workflow-" + Date.now(),
+          name: "Chatbot Workflow",
+        };
+
+        resultDiv.textContent = `Generated Workflow JSON:
+
+Copy JSON berikut dan import ke n8n:
+
+${JSON.stringify(workflowJson, null, 2)}
+
+Setelah import:
+1. Aktivkan workflow di n8n
+2. Copy webhook URL yang dihasilkan
+3. Update URL di aplikasi chatbot`;
+      }
+
+      // Show setup instructions
+      function showWebhookInstructions() {
+        const resultDiv = document.getElementById("workflowResult");
+        resultDiv.style.display = "block";
+        resultDiv.className = "result info";
+
+        resultDiv.textContent = `📋 Instruksi Setup n8n Webhook:
+
+1. BUKA n8n di browser: http://localhost:5678
+
+2. BUAT WORKFLOW BARU:
+   - Klik "Add workflow" atau "+" untuk workflow baru
+
+3. TAMBAH WEBHOOK NODE:
+   - Drag "Webhook" node dari panel kiri
+   - Set konfigurasi:
+     * HTTP Method: POST
+     * Webhook URL: inputWebhook (tanpa slash)
+     * Response Mode: "Response to Webhook"
+
+4. TAMBAH CODE NODE:
+   - Drag "Code" node
+   - Copy paste kode dari "Generate Workflow JSON"
+
+5. TAMBAH RESPOND TO WEBHOOK NODE:
+   - Drag "Respond to Webhook" node
+   - Set Response Body: {{ $json.response }}
+
+6. HUBUNGKAN NODES:
+   Webhook → Code → Respond to Webhook
+
+7. SIMPAN DAN AKTIFKAN:
+   - Klik "Save" 
+   - Toggle switch untuk mengaktifkan workflow
+   - Copy webhook URL yang muncul
+
+8. UPDATE APLIKASI:
+   - Paste webhook URL ke aplikasi chatbot
+   - Test dengan tombol di bawah
+
+⚠️ PENTING: Webhook URL akan berbentuk:
+http://localhost:5678/webhook/[random-id]
+
+Gunakan URL lengkap tersebut di aplikasi!`;
+      }
+
+      // Test chatbot webhook
+      async function testChatbotWebhook() {
+        const resultDiv = document.getElementById("chatbotResult");
+        const message = document.getElementById("testMessage").value;
+        resultDiv.style.display = "block";
+        resultDiv.textContent = "Testing chatbot webhook integration...";
+        resultDiv.className = "result info";
+
+        if (!discoveredWebhookUrl) {
+          resultDiv.className = "result error";
+          resultDiv.textContent = `❌ Tidak ada webhook URL yang ditemukan!
+
+Lakukan langkah berikut:
+1. Test webhook URLs di atas untuk menemukan yang benar
+2. Atau setup webhook baru di n8n
+3. Lalu coba test ini lagi`;
+          return;
+        }
+
+        try {
+          const payload = {
+            message: message,
+            timestamp: new Date().toISOString(),
+            userId: "chatbot-test-user",
+            sessionId: "chatbot-test-session",
+          };
+
+          const response = await fetch(discoveredWebhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const responseData = await response.text();
+
+          if (response.ok) {
+            resultDiv.className = "result success";
+            resultDiv.textContent = `✅ Chatbot webhook berhasil!
+
+URL: ${discoveredWebhookUrl}
+Status: ${response.status}
+
+User Message: "${message}"
+AI Response: ${responseData}
+
+Payload sent:
+${JSON.stringify(payload, null, 2)}`;
+
+            // Update aplikasi dengan URL yang benar
+            updateChatbotConfig(discoveredWebhookUrl);
+          } else {
+            throw new Error(`HTTP ${response.status}: ${responseData}`);
+          }
+        } catch (error) {
+          resultDiv.className = "result error";
+          resultDiv.textContent = `❌ Chatbot webhook gagal:
+${error.message}
+
+URL: ${discoveredWebhookUrl}`;
+        }
+      }
+
+      // Update chatbot config
+      function updateChatbotConfig(webhookUrl) {
+        // Try to update the main application config if accessible
+        try {
+          if (
+            window.opener &&
+            window.opener.chatbotApp &&
+            window.opener.chatbotApp.updateConfig
+          ) {
+            window.opener.chatbotApp.updateConfig({
+              webhook: {
+                input: webhookUrl,
+                output: webhookUrl + "_output", // placeholder
+              },
+            });
+            console.log("Updated parent window config");
+          }
+
+          // Also update localStorage for reference
+          localStorage.setItem("correct_webhook_url", webhookUrl);
+        } catch (e) {
+          console.log("Could not update parent config:", e.message);
+        }
+      }
+
+      // Simulate chatbot flow
+      async function simulateChatbotFlow() {
+        const resultDiv = document.getElementById("chatbotResult");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = "Simulating full chatbot flow...";
+        resultDiv.className = "result info";
+
+        let results = [];
+
+        // 1. Check components
+        results.push("1. Checking chatbot components...");
+        if (typeof customElements !== "undefined") {
+          results.push("   ✅ Custom Elements API available");
+        } else {
+          results.push("   ❌ Custom Elements API not available");
+        }
+
+        // 2. Test localStorage
+        try {
+          localStorage.setItem("test", "test");
+          localStorage.removeItem("test");
+          results.push("   ✅ localStorage working");
+        } catch (e) {
+          results.push("   ❌ localStorage not working");
+        }
+
+        // 3. Test webhook if discovered
+        if (discoveredWebhookUrl) {
+          results.push("\n2. Testing webhook...");
+          try {
+            const response = await fetch(discoveredWebhookUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                message: "Flow test",
+                timestamp: new Date().toISOString(),
+                userId: "flow-test",
+                sessionId: "flow-session",
+              }),
+            });
+
+            if (response.ok) {
+              results.push("   ✅ Webhook responding correctly");
+              const data = await response.text();
+              results.push(`   Response: ${data}`);
+            } else {
+              results.push(`   ❌ Webhook error: ${response.status}`);
+            }
+          } catch (e) {
+            results.push(`   ❌ Webhook error: ${e.message}`);
+          }
+        } else {
+          results.push("\n2. ⚠️ No webhook URL discovered yet");
+        }
+
+        // 4. Simulate message flow
+        results.push("\n3. Simulating message flow...");
+        const pendingMessages = [
+          {
+            message: "Test response from diagnostic",
+            sender: "AI",
+            timestamp: new Date(),
+            type: "ai",
+          },
+        ];
+
+        localStorage.setItem(
+          "n8n_pending_messages",
+          JSON.stringify(pendingMessages)
+        );
+        results.push("   ✅ Added test message to pending queue");
+
+        resultDiv.className = "result success";
+        resultDiv.textContent = results.join("\n");
+      }
+
+      // Clear chatbot data
+      function clearChatbotData() {
+        localStorage.removeItem("n8n_pending_messages");
+        localStorage.removeItem("chatbot_user_id");
+        sessionStorage.removeItem("chatbot_session_id");
+
+        const resultDiv = document.getElementById("chatbotResult");
+        resultDiv.style.display = "block";
+        resultDiv.className = "result success";
+        resultDiv.textContent = `✅ Chatbot data cleared:
+- Pending messages
+- User ID  
+- Session ID
+
+Data sudah direset untuk testing fresh.`;
+      }
+
+      // Auto-run diagnostics on load
+      window.addEventListener("load", function () {
+        console.log("n8n Diagnostic Tool loaded");
+        setTimeout(checkN8nServer, 1000);
+      });
+    </script>
+  </body>
+</html>

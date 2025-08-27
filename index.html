@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>Interactive Story - Main Page</title>
+    <!-- Browser Compatibility Styles -->
+    <link rel="stylesheet" href="styles/browser-compatibility.css" />
+    <!-- Polyfills for older browsers -->
+    <script src="js/browser-polyfills.js"></script>
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- Index Page Specific Styles -->
+    <link rel="stylesheet" href="styles/index.css" />
+    <!-- Chatbot Button Styles -->
+    <link rel="stylesheet" href="styles/chatbot-button.css" />
+    <!-- Chatbot Template -->
+    <link rel="stylesheet" href="chatbot-template/styles/chatbot.css" />
+  </head>
+  <body>
+    <div class="scene-container">
+      <!-- Header -->
+      <header class="scene-header" role="banner">
+        <div class="header-content">
+          <h1 class="scene-title" id="main-title">📖 Interactive Story</h1>
+          <nav class="scene-nav" role="navigation" aria-label="Navigasi utama">
+            <a href="discussion.html" class="nav-btn" aria-describedby="main-title">
+              <span aria-hidden="true">💬</span> Discussion
+            </a>
+            <a href="#" class="nav-btn" aria-describedby="main-title">
+              <span aria-hidden="true">🔍</span> Explore
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="scene-main" role="main" aria-labelledby="main-title">
+        <!-- Scene Image Area -->
+        <section class="scene-image" id="sceneImageContainer" role="img" aria-label="Area gambar cerita interaktif">
+          <!-- Story Title Overlay -->
+          <div class="story-title-overlay" role="banner">
+            <h2 class="story-title" id="story-title">Suara dari Titik Nol: Kisah Dahlia</h2>
+          </div>
+
+          <img
+            src="assets/images/posterStory_gemini2.5.png"
+            alt="Poster cerita interaktif menampilkan ilustrasi Dahlia dengan latar belakang mistis"
+            class="scene-image-poster"
+            id="sceneImagePoster"
+            draggable="false"
+            role="img"
+          />
+
+          <!-- Image Caption Overlay -->
+          <div class="image-caption-overlay" role="contentinfo">
+            <p id="image-credit">Ilustrasi gambar dibuat dengan Gemini 2.5 Pro</p>
+          </div>
+
+          <!-- Start Story Button Overlay -->
+          <div class="start-story-overlay" role="toolbar">
+            <button 
+              class="start-story-btn" 
+              type="button"
+              aria-label="Mulai membaca cerita interaktif Suara dari Titik Nol"
+              aria-describedby="story-title"
+            >
+              <span class="btn-icon" aria-hidden="true">⬇</span>
+              <span class="btn-text">Mulai Cerita</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Scene Text Area -->
+        <section class="scene-text" role="article" aria-labelledby="chapter-title">
+          <div class="scene-text-content">
+            <h2 id="chapter-title">Chapter 1: The Beginning</h2>
+            <p>
+              Selamat datang di cerita interaktif yang akan mengajak Anda
+              berpetualang melalui berbagai pilihan dan konsekuensi. Setiap
+              keputusan yang Anda buat akan mempengaruhi jalan cerita.
+            </p>
+            <div 
+              class="call_action choice" 
+              role="complementary" 
+              aria-label="Pilihan cerita interaktif"
+              tabindex="0"
+            >
+              "Anda berada di depan sebuah hutan yang gelap dan misterius. Angin
+              bertiup pelan membawa aroma tanah basah dan daun-daun kering. Di
+              kejauhan, Anda mendengar suara yang tidak familiar. Apakah Anda
+              akan melangkah masuk atau mencari jalan lain?"
+            </div>
+
+            <!-- REMOVED: Demo section - only needed during development -->
+            <!-- TODO: Re-enable for development/demo purposes if needed -->
+          </div>
+        </section>
+
+        <!-- Chat Components Area - Floating Layout for Index -->
+        <aside 
+          class="index-chat-container" 
+          id="chatContainer" 
+          role="complementary" 
+          aria-label="Panel chat interaktif"
+          aria-hidden="true"
+        >
+          <!-- Close button for floating chat -->
+          <button
+            class="floating-chat-close"
+            id="closeChatBtn"
+            type="button"
+            aria-label="Tutup panel chat"
+            title="Tutup panel chat (Escape)"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+
+          <!-- Chat Output Section (AI Responses) -->
+          <section class="index-chat-output-section" role="log" aria-label="Respon cerita dari AI">
+            <h3 id="chat-output-title">
+              <span aria-hidden="true">🤖</span> Story Response
+            </h3>
+            <!-- AI responses and story narration appear here -->
+            <chat-output 
+              id="storyOutput" 
+              aria-labelledby="chat-output-title"
+              aria-live="polite"
+            ></chat-output>
+          </section>
+
+          <!-- Chat Input Section (User Input) -->
+          <section class="index-chat-input-section" role="form" aria-label="Input untuk berinteraksi dengan cerita">
+            <chat-input
+              id="storyInput"
+              placeholder="Tuliskan pilihan atau pertanyaan Anda tentang cerita..."
+              aria-label="Input pesan untuk berinteraksi dengan cerita"
+              aria-describedby="chat-input-help"
+            ></chat-input>
+            <div id="chat-input-help" class="sr-only">
+              Ketik pesan Anda dan tekan Enter untuk mengirim, atau gunakan tombol kirim
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <!-- Shared Footer -->
+      <shared-footer current-page="index"></shared-footer>
+    </div>
+
+    <!-- Floating Chatbot Button -->
+    <button
+      class="floating-chatbot-btn"
+      type="button"
+      aria-label="Buka atau tutup panel chat interaktif untuk berinteraksi dengan cerita"
+      aria-describedby="chatbot-tooltip"
+      aria-expanded="false"
+      aria-controls="chatContainer"
+      title="Chat Interaktif (Klik untuk membuka)"
+    >
+      <img
+        src="assets/icons/chatBot_button.png"
+        alt=""
+        class="chatbot-icon"
+        aria-hidden="true"
+        role="presentation"
+      />
+      <span 
+        id="chatbot-tooltip" 
+        class="chatbot-tooltip" 
+        role="tooltip"
+        aria-live="polite"
+      >Hai, Klik jika butuh pendampingan saya ya</span>
+      <span class="btn-pulse" aria-hidden="true"></span>
+    </button>
+
+    <!-- Error Handler and Performance Utilities -->
+    <script src="js/error-handler.js"></script>
+    <script src="js/performance-utils.js"></script>
+
+    <!-- Chatbot Template Scripts -->
+    <script src="chatbot-template/js/config-manager.js"></script>
+    <script src="chatbot-template/js/chat-manager.js"></script>
+    <script src="chatbot-template/components/chat-input.js"></script>
+    <script src="chatbot-template/components/chat-output.js"></script>
+    <!-- Essential chatbot components only - removed unused scripts -->
+    <script src="chatbot-template/examples/example-configs.js"></script>
+
+    <!-- Shared Footer Component -->
+    <script src="components/shared-footer.js"></script>
+
+    <script>
+      /**
+       * Main Index Page Initialization
+       * Handles bot configuration, scene image upload, and welcome message
+       */
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("📖 Index page loaded");
+
+        // Initialize bot configuration with story narrator persona
+        initializeBotConfiguration();
+
+        // Setup start story button functionality
+        console.log("🔧 Initializing start story button...");
+        setupStartStoryButton();
+
+        // Setup floating chatbot button functionality
+        setupFloatingChatbotButton();
+
+        // Setup chat close button functionality
+        setupChatCloseButton();
+
+        // Show tooltip on page load with a slight delay
+        setTimeout(() => {
+          // Only show tooltip if chat is not already open
+          const chatContainer = document.querySelector("#chatContainer");
+          if (chatContainer && !chatContainer.classList.contains("show")) {
+            showChatbotTooltip();
+
+            // Auto-hide tooltip after 5 seconds
+            setTimeout(() => {
+              hideChatbotTooltip();
+            }, 5000);
+          }
+        }, 1500);
+
+        // Debug layout issues
+        debugLayoutIssues();
+
+        // Display debug information in development
+        if (window.location.hostname === "localhost") {
+          logDebugInfo();
+        }
+      });
+
+      /**
+       * Initialize bot configuration with default story narrator
+       * Only sets default if no existing configuration found
+       */
+      function initializeBotConfiguration() {
+        setTimeout(() => {
+          if (window.ConfigManager && window.PersonaManager) {
+            // Check if bot config already exists
+            if (!localStorage.getItem("chatbot_config")) {
+              const storyConfig = window.PersonaManager.getPersona("narrator");
+              if (storyConfig) {
+                window.ConfigManager.saveConfig(storyConfig);
+                console.log(
+                  "📚 Default story narrator persona set for first visit!"
+                );
+              }
+            } else {
+              console.log(
+                "📚 Using existing bot configuration from botSetting.html"
+              );
+            }
+
+            // Display personalized welcome message
+            displayWelcomeMessage();
+          } else {
+            console.warn("⚠️ ConfigManager or PersonaManager not available");
+          }
+        }, 500);
+      }
+
+      /**
+       * Display welcome message using current bot configuration
+       */
+      function displayWelcomeMessage() {
+        setTimeout(() => {
+          const currentConfig = window.ConfigManager.getConfig();
+          const chatOutput = document.getElementById("storyOutput");
+
+          if (chatOutput && chatOutput.simulateWebhookMessage) {
+            const botName = currentConfig.botName || "Narrator";
+            const botDescription =
+              currentConfig.botDescription || "Pemandu cerita interaktif";
+
+            chatOutput.simulateWebhookMessage(
+              `Selamat datang di cerita ini! Saya adalah ${botName}, ${botDescription}. Silakan buat pilihan atau ajukan pertanyaan tentang cerita ini.`,
+              botName,
+              "ai"
+            );
+          }
+        }, 1000);
+      }
+
+      /**
+       * Setup start story button functionality
+       */
+      function setupStartStoryButton() {
+        console.log("🔧 Setting up start story button...");
+
+        // Try to find the button
+        const startStoryBtn = document.querySelector(".start-story-btn");
+        console.log("🔍 Found start story button:", startStoryBtn);
+
+        if (!startStoryBtn) {
+          console.warn("⚠️ Start story button not found, retrying in 500ms...");
+          // Retry after a short delay in case DOM is not fully loaded
+          setTimeout(setupStartStoryButton, 500);
+          return;
+        }
+
+        // Remove any existing event listeners
+        startStoryBtn.removeEventListener("click", handleStartStory);
+
+        // Add the event listener
+        startStoryBtn.addEventListener("click", handleStartStory);
+        console.log("✅ Start story button event listener added successfully");
+
+        // Also add event listener to the overlay as fallback
+        const startStoryOverlay = document.querySelector(
+          ".start-story-overlay"
+        );
+        if (startStoryOverlay) {
+          startStoryOverlay.removeEventListener("click", handleStartStory);
+          startStoryOverlay.addEventListener("click", handleStartStory);
+          console.log(
+            "✅ Start story overlay event listener added as fallback"
+          );
+        }
+
+        // Test if button is clickable
+        startStoryBtn.style.pointerEvents = "auto";
+        console.log("🎯 Button is now clickable");
+
+        // Test click functionality
+        console.log("🧪 Testing button click functionality...");
+        startStoryBtn.onclick = function (e) {
+          console.log("🎯 Button clicked via onclick!");
+          handleStartStory(e);
+        };
+      }
+
+      /**
+       * Handle start story button click
+       */
+      function handleStartStory(event) {
+        console.log("🚀 Starting story...");
+        console.log("📱 Event:", event);
+
+        // Prevent any default behavior
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        // Scroll to the story text section
+        const storyText = document.querySelector(".scene-text");
+        console.log("📖 Found story text element:", storyText);
+
+        if (storyText) {
+          console.log("📜 Scrolling to story text...");
+          storyText.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+          console.log("✅ Scroll initiated");
+        } else {
+          console.error("❌ Story text element not found!");
+        }
+
+        // Optional: Add some visual feedback
+        const btn = document.querySelector(".start-story-btn");
+        if (btn) {
+          console.log("🎨 Adding visual feedback...");
+          btn.style.transform = "scale(0.95)";
+          setTimeout(() => {
+            btn.style.transform = "";
+            console.log("✅ Visual feedback completed");
+          }, 150);
+        } else {
+          console.warn("⚠️ Button element not found for visual feedback");
+        }
+      }
+
+      /**
+       * Setup floating chatbot button functionality
+       */
+      function setupFloatingChatbotButton() {
+        console.log("🤖 Setting up floating chatbot button...");
+
+        const chatbotBtn = document.querySelector(".floating-chatbot-btn");
+        console.log("🔍 Found floating chatbot button:", chatbotBtn);
+
+        if (!chatbotBtn) {
+          console.warn(
+            "⚠️ Floating chatbot button not found, retrying in 500ms..."
+          );
+          setTimeout(setupFloatingChatbotButton, 500);
+          return;
+        }
+
+        // Add click event listener
+        chatbotBtn.addEventListener("click", handleChatbotClick);
+
+        // Add keyboard navigation support
+        chatbotBtn.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleChatbotClick(event);
+          }
+          // ESC key to close chat if open
+          if (event.key === "Escape") {
+            const chatContainer = document.querySelector("#chatContainer");
+            if (chatContainer && chatContainer.classList.contains("show")) {
+              handleChatClose(event);
+            }
+          }
+        });
+
+        // Add mouseover and mouseout event listeners for tooltip visibility
+        chatbotBtn.addEventListener("mouseover", handleChatbotMouseOver);
+        chatbotBtn.addEventListener("mouseout", handleChatbotMouseOut);
+
+        console.log(
+          "✅ Floating chatbot button event listeners added successfully"
+        );
+      }
+
+      /**
+       * Handle floating chatbot button click
+       */
+      function handleChatbotClick(event) {
+        console.log("🤖 Chatbot button clicked!");
+
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        // Toggle floating chat panel
+        const chatContainer = document.querySelector("#chatContainer");
+        const sceneContainer = document.querySelector(".scene-container");
+
+        if (chatContainer && sceneContainer) {
+          const isVisible = chatContainer.classList.contains("show");
+
+          if (isVisible) {
+            // Hide chat and reset layout
+            chatContainer.classList.remove("show");
+            chatContainer.setAttribute("aria-hidden", "true");
+            sceneContainer.classList.remove("chat-open");
+            
+            // Update button ARIA state
+            const chatbotBtn = document.querySelector(".floating-chatbot-btn");
+            if (chatbotBtn) {
+              chatbotBtn.setAttribute("aria-expanded", "false");
+            }
+            
+            console.log("💬 Chat panel hidden, layout reset");
+          } else {
+            // Show chat and shift layout
+            chatContainer.classList.add("show");
+            chatContainer.setAttribute("aria-hidden", "false");
+            sceneContainer.classList.add("chat-open");
+            
+            // Update button ARIA state
+            const chatbotBtn = document.querySelector(".floating-chatbot-btn");
+            if (chatbotBtn) {
+              chatbotBtn.setAttribute("aria-expanded", "true");
+            }
+            
+            // Focus management - focus on chat input when opened
+            setTimeout(() => {
+              const chatInput = document.getElementById("storyInput");
+              if (chatInput && chatInput.shadowRoot) {
+                const input = chatInput.shadowRoot.querySelector(".message-input");
+                if (input) {
+                  input.focus();
+                }
+              }
+            }, 100);
+            
+            console.log("💬 Chat panel shown, layout shifted");
+
+            // Hide tooltip when chat is opened
+            hideChatbotTooltip();
+          }
+
+          // Debug layout after changes
+          setTimeout(() => {
+            debugLayoutIssues();
+
+            // Force reflow to ensure CSS changes are applied
+            const sceneMain = document.querySelector(".scene-main");
+            const chatContainer = document.querySelector("#chatContainer");
+            if (sceneMain && chatContainer) {
+              const sceneStyle = window.getComputedStyle(sceneMain);
+              const chatStyle = window.getComputedStyle(chatContainer);
+              const chatRect = chatContainer.getBoundingClientRect();
+              const sceneRect = sceneMain.getBoundingClientRect();
+
+              console.log("🎯 Scene main computed width:", sceneStyle.width);
+              console.log(
+                "🎯 Scene main computed margin-left:",
+                sceneStyle.marginLeft
+              );
+              console.log(
+                "🎯 Scene main computed margin-right:",
+                sceneStyle.marginRight
+              );
+              console.log(
+                "🎯 Scene main computed max-width:",
+                sceneStyle.maxWidth
+              );
+              console.log("💬 Chat container width:", chatStyle.width);
+              console.log("💬 Chat container right position:", chatStyle.right);
+              console.log("📏 Scene rect:", {
+                left: sceneRect.left,
+                right: sceneRect.right,
+                width: sceneRect.width,
+              });
+              console.log("📏 Chat rect:", {
+                left: chatRect.left,
+                right: chatRect.right,
+                width: chatRect.width,
+              });
+              console.log(
+                "📏 Actual spacing between content and chat:",
+                Math.round(chatRect.left - (sceneRect.left + sceneRect.width)) +
+                  "px"
+              );
+              console.log(
+                "⚠️ Overlap check:",
+                sceneRect.left + sceneRect.width > chatRect.left
+                  ? "OVERLAP DETECTED!"
+                  : "No overlap"
+              );
+            }
+          }, 500);
+        } else {
+          console.error("❌ Chat container or scene container not found!");
+        }
+
+        // Visual feedback
+        const btn = document.querySelector(".floating-chatbot-btn");
+        if (btn) {
+          btn.style.transform = "scale(0.9)";
+          setTimeout(() => {
+            btn.style.transform = "";
+          }, 150);
+        }
+      }
+
+      /**
+       * Setup chat close button
+       */
+      function setupChatCloseButton() {
+        console.log("🔧 Setting up chat close button...");
+        const closeBtn = document.querySelector("#closeChatBtn");
+        console.log("🔍 Found close button:", closeBtn);
+
+        if (!closeBtn) {
+          console.warn("⚠️ Close button not found, retrying in 500ms...");
+          setTimeout(setupChatCloseButton, 500);
+          return;
+        }
+
+        closeBtn.addEventListener("click", handleChatClose);
+        
+        // Add keyboard support for close button
+        closeBtn.addEventListener("keydown", function(event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleChatClose(event);
+          }
+        });
+        
+        console.log("✅ Chat close button event listener added successfully");
+      }
+
+      /**
+       * Handle chat close button click
+       */
+      function handleChatClose(event) {
+        console.log("❌ Chat close button clicked!");
+
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        // Hide chat container and reset layout
+        const chatContainer = document.querySelector("#chatContainer");
+        const sceneContainer = document.querySelector(".scene-container");
+
+        if (chatContainer && sceneContainer) {
+          chatContainer.classList.remove("show");
+          chatContainer.setAttribute("aria-hidden", "true");
+          sceneContainer.classList.remove("chat-open");
+          
+          // Update button ARIA state
+          const chatbotBtn = document.querySelector(".floating-chatbot-btn");
+          if (chatbotBtn) {
+            chatbotBtn.setAttribute("aria-expanded", "false");
+            // Return focus to chatbot button
+            chatbotBtn.focus();
+          }
+          
+          console.log("💬 Chat panel closed, layout reset");
+
+          // Show tooltip again when chat is closed
+          showChatbotTooltip();
+        }
+
+        // Visual feedback
+        const btn = document.querySelector("#closeChatBtn");
+        if (btn) {
+          btn.style.transform = "scale(0.9)";
+          setTimeout(() => {
+            btn.style.transform = "";
+          }, 150);
+        }
+      }
+
+      /**
+       * Handle chatbot button mouseover
+       */
+      function handleChatbotMouseOver() {
+        // Only show tooltip if chat panel is not visible
+        const chatContainer = document.querySelector("#chatContainer");
+        if (chatContainer && !chatContainer.classList.contains("show")) {
+          showChatbotTooltip();
+        }
+      }
+
+      /**
+       * Handle chatbot button mouseout
+       */
+      function handleChatbotMouseOut() {
+        hideChatbotTooltip();
+      }
+
+      /**
+       * Show chatbot tooltip
+       */
+      function showChatbotTooltip() {
+        const tooltip = document.querySelector(".chatbot-tooltip");
+        const chatContainer = document.querySelector("#chatContainer");
+
+        // Only show tooltip if chat is not visible
+        if (
+          tooltip &&
+          chatContainer &&
+          !chatContainer.classList.contains("show")
+        ) {
+          tooltip.classList.add("is-visible");
+          console.log("💬 Tooltip shown");
+        }
+      }
+
+      /**
+       * Hide chatbot tooltip
+       */
+      function hideChatbotTooltip() {
+        const tooltip = document.querySelector(".chatbot-tooltip");
+        if (tooltip) {
+          tooltip.classList.remove("is-visible");
+          console.log("💬 Tooltip hidden");
+        }
+      }
+
+      /**
+       * Debug layout issues
+       */
+      function debugLayoutIssues() {
+        console.log("🔍 Debugging layout issues...");
+
+        // Check scene container
+        const sceneContainer = document.querySelector(".scene-container");
+        if (sceneContainer) {
+          const rect = sceneContainer.getBoundingClientRect();
+          console.log("📦 Scene container:", {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left,
+            zIndex: window.getComputedStyle(sceneContainer).zIndex,
+            hasChatOpen: sceneContainer.classList.contains("chat-open"),
+          });
+        }
+
+        // Check scene main
+        const sceneMain = document.querySelector(".scene-main");
+        if (sceneMain) {
+          const rect = sceneMain.getBoundingClientRect();
+          const styles = window.getComputedStyle(sceneMain);
+          console.log("🏗️ Scene main:", {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left,
+            transform: styles.transform,
+            marginRight: styles.marginRight,
+          });
+        }
+
+        // Check chat container
+        const chatContainer = document.querySelector("#chatContainer");
+        if (chatContainer) {
+          const rect = chatContainer.getBoundingClientRect();
+          const styles = window.getComputedStyle(chatContainer);
+          console.log("💬 Chat container:", {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left,
+            display: styles.display,
+            position: styles.position,
+            isVisible: chatContainer.classList.contains("show"),
+          });
+        }
+
+        // Check current viewport size
+        console.log("📱 Viewport:", {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          isMobile: window.innerWidth <= 768,
+        });
+
+        console.log("✅ Layout debugging completed");
+      }
+
+      /**
+       * Log debug information for development purposes
+       * Only called in localhost environment
+       */
+      function logDebugInfo() {
+        console.log("🎯 Available functions:", {
+          ConfigManager: typeof window.ConfigManager,
+          PersonaManager: typeof window.PersonaManager,
+          ChatInput: typeof window.customElements.get("chat-input"),
+          ChatOutput: typeof window.customElements.get("chat-output"),
+        });
+      }
+    </script>
+  </body>
+</html>

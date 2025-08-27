@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Chat History Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .test-result {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .test-pass {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .test-fail {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .test-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .stat-card {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        border-left: 4px solid #007bff;
+      }
+    </style>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </head>
+  <body>
+    <h1>🧪 Chat History Manager Test Suite</h1>
+
+    <div class="test-container">
+      <h2>📊 Status Sistem</h2>
+      <div id="systemStatus"></div>
+    </div>
+
+    <div class="test-container">
+      <h2>🔧 Test Controls</h2>
+      <button onclick="runAllTests()">▶️ Jalankan Semua Test</button>
+      <button onclick="addSampleMessages()">📝 Tambah Pesan Sample</button>
+      <button onclick="clearAllData()">🗑️ Hapus Semua Data</button>
+      <button onclick="showStats()">📈 Tampilkan Statistik</button>
+    </div>
+
+    <div class="test-container">
+      <h2>✅ Test Results</h2>
+      <div id="testResults"></div>
+    </div>
+
+    <div class="test-container">
+      <h2>📊 History Statistics</h2>
+      <div id="historyStats"></div>
+    </div>
+
+    <div class="test-container">
+      <h2>🧪 Export Tests</h2>
+      <button onclick="testExportTxt()">📄 Test Export TXT</button>
+      <button onclick="testExportMd()">📝 Test Export Markdown</button>
+      <button onclick="testExportPdf()">📕 Test Export PDF</button>
+    </div>
+
+    <div class="test-container">
+      <h2>📋 Export Preview</h2>
+      <div>
+        <label>
+          <input type="radio" name="previewScope" value="session" checked />
+          Sesi Saat Ini
+        </label>
+        <label>
+          <input type="radio" name="previewScope" value="all" />
+          Semua Data
+        </label>
+      </div>
+      <button onclick="showPreview()">👁️ Tampilkan Preview</button>
+      <pre
+        id="exportPreview"
+        style="
+          background: #f8f9fa;
+          padding: 10px;
+          border-radius: 4px;
+          max-height: 300px;
+          overflow-y: auto;
+        "
+      ></pre>
+    </div>
+
+    <!-- Chat History Manager -->
+    <script src="../js/chat-history-manager.js"></script>
+
+    <script>
+      // Test Suite Implementation
+      let testResults = [];
+
+      function log(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `test-result test-${type}`;
+        div.textContent = message;
+        document.getElementById("testResults").appendChild(div);
+        console.log(`[${type.toUpperCase()}] ${message}`);
+      }
+
+      function checkSystemStatus() {
+        const statusDiv = document.getElementById("systemStatus");
+        let status = "";
+
+        // Check ChatHistoryManager
+        if (window.ChatHistoryManager) {
+          status += '<div class="test-pass">✅ ChatHistoryManager loaded</div>';
+        } else {
+          status +=
+            '<div class="test-fail">❌ ChatHistoryManager not found</div>';
+          return;
+        }
+
+        // Check jsPDF
+        if (window.jsPDF) {
+          status += '<div class="test-pass">✅ jsPDF library loaded</div>';
+        } else {
+          status += '<div class="test-fail">❌ jsPDF library not found</div>';
+        }
+
+        // Check localStorage
+        try {
+          localStorage.setItem("test", "test");
+          localStorage.removeItem("test");
+          status += '<div class="test-pass">✅ LocalStorage available</div>';
+        } catch (e) {
+          status +=
+            '<div class="test-fail">❌ LocalStorage not available</div>';
+        }
+
+        statusDiv.innerHTML = status;
+      }
+
+      function testBasicFunctionality() {
+        log("Starting basic functionality tests...", "info");
+
+        // Test 1: Add message
+        try {
+          const result = window.ChatHistoryManager.addMessage(
+            "user",
+            "Test message"
+          );
+          if (result && result.id) {
+            log("✅ Add message: PASS", "pass");
+          } else {
+            log("❌ Add message: FAIL", "fail");
+          }
+        } catch (e) {
+          log(`❌ Add message error: ${e.message}`, "fail");
+        }
+
+        // Test 2: Get history
+        try {
+          const history = window.ChatHistoryManager.getCurrentSessionHistory();
+          if (Array.isArray(history)) {
+            log(`✅ Get history: PASS (${history.length} messages)`, "pass");
+          } else {
+            log("❌ Get history: FAIL - not an array", "fail");
+          }
+        } catch (e) {
+          log(`❌ Get history error: ${e.message}`, "fail");
+        }
+
+        // Test 3: Statistics
+        try {
+          const stats = window.ChatHistoryManager.getHistoryStats();
+          if (stats && typeof stats.totalMessages === "number") {
+            log("✅ Get statistics: PASS", "pass");
+          } else {
+            log("❌ Get statistics: FAIL", "fail");
+          }
+        } catch (e) {
+          log(`❌ Get statistics error: ${e.message}`, "fail");
+        }
+      }
+
+      function testExportFunctionality() {
+        log("Starting export functionality tests...", "info");
+
+        // Test plain text export
+        try {
+          const textExport = window.ChatHistoryManager.exportToPlainText(true);
+          if (textExport && typeof textExport === "string") {
+            log("✅ Plain text export: PASS", "pass");
+          } else {
+            log("❌ Plain text export: FAIL", "fail");
+          }
+        } catch (e) {
+          log(`❌ Plain text export error: ${e.message}`, "fail");
+        }
+
+        // Test markdown export
+        try {
+          const mdExport = window.ChatHistoryManager.exportToMarkdown(true);
+          if (mdExport && typeof mdExport === "string") {
+            log("✅ Markdown export: PASS", "pass");
+          } else {
+            log("❌ Markdown export: FAIL", "fail");
+          }
+        } catch (e) {
+          log(`❌ Markdown export error: ${e.message}`, "fail");
+        }
+      }
+
+      function testDataPersistence() {
+        log("Starting data persistence tests...", "info");
+
+        const testMessage = `Test persistence ${Date.now()}`;
+
+        // Add a message
+        window.ChatHistoryManager.addMessage("test-user", testMessage);
+
+        // Create new instance to test persistence
+        const newManager = new ChatHistoryManager();
+        const history = newManager.getCurrentSessionHistory();
+
+        // Check if message persists
+        const found = history.some((msg) => msg.message === testMessage);
+        if (found) {
+          log("✅ Data persistence: PASS", "pass");
+        } else {
+          log("❌ Data persistence: FAIL", "fail");
+        }
+      }
+
+      function addSampleMessages() {
+        const sampleMessages = [
+          { speaker: "user", message: "Halo, apa kabar?" },
+          {
+            speaker: "Arya the narrator",
+            message: "Halo! Saya baik, terima kasih. Ada yang bisa saya bantu?",
+          },
+          {
+            speaker: "user",
+            message: "Bisakah kamu ceritakan tentang petualangan hari ini?",
+          },
+          {
+            speaker: "Arya the narrator",
+            message:
+              "Tentu! Hari ini adalah hari yang penuh petualangan. Kamu memasuki hutan misterius...",
+          },
+          { speaker: "user", message: "Apa yang terjadi selanjutnya?" },
+          {
+            speaker: "Arya the narrator",
+            message:
+              "Di dalam hutan, kamu menemukan sebuah pohon besar dengan pintu kecil di pangkalnya...",
+          },
+        ];
+
+        sampleMessages.forEach((msg, index) => {
+          setTimeout(() => {
+            window.ChatHistoryManager.addMessage(msg.speaker, msg.message);
+          }, index * 500);
+        });
+
+        log(`📝 Menambahkan ${sampleMessages.length} pesan sample...`, "info");
+        setTimeout(() => {
+          showStats();
+          log("✅ Sample messages added!", "pass");
+        }, sampleMessages.length * 500 + 100);
+      }
+
+      function clearAllData() {
+        if (confirm("Yakin ingin menghapus semua data test?")) {
+          window.ChatHistoryManager.clearHistory();
+          document.getElementById("testResults").innerHTML = "";
+          document.getElementById("historyStats").innerHTML = "";
+          document.getElementById("exportPreview").textContent = "";
+          log("🗑️ Semua data telah dihapus", "info");
+        }
+      }
+
+      function showStats() {
+        const sessionStats = window.ChatHistoryManager.getHistoryStats(true);
+        const allStats = window.ChatHistoryManager.getHistoryStats(false);
+
+        const statsDiv = document.getElementById("historyStats");
+        statsDiv.innerHTML = `
+                <div class="stats">
+                    <div class="stat-card">
+                        <strong>Sesi Saat Ini</strong><br>
+                        Pesan: ${sessionStats.totalMessages}<br>
+                        User: ${sessionStats.userMessages}<br>
+                        Bot: ${sessionStats.botMessages}
+                    </div>
+                    <div class="stat-card">
+                        <strong>Total Semua</strong><br>
+                        Pesan: ${allStats.totalMessages}<br>
+                        User: ${allStats.userMessages}<br>
+                        Bot: ${allStats.botMessages}
+                    </div>
+                    <div class="stat-card">
+                        <strong>Durasi Sesi</strong><br>
+                        ${
+                          sessionStats.duration
+                            ? Math.floor(sessionStats.duration / 60000) +
+                              " menit"
+                            : "Baru dimulai"
+                        }
+                    </div>
+                    <div class="stat-card">
+                        <strong>Session ID</strong><br>
+                        ${window.ChatHistoryManager.sessionId.substring(
+                          0,
+                          12
+                        )}...
+                    </div>
+                </div>
+            `;
+      }
+
+      function showPreview() {
+        const scope = document.querySelector(
+          'input[name="previewScope"]:checked'
+        ).value;
+        const currentSessionOnly = scope === "session";
+
+        const textPreview =
+          window.ChatHistoryManager.exportToPlainText(currentSessionOnly);
+        document.getElementById("exportPreview").textContent = textPreview;
+      }
+
+      function testExportTxt() {
+        try {
+          window.ChatHistoryManager.exportAndDownloadPlainText(true);
+          log("✅ TXT export download triggered", "pass");
+        } catch (e) {
+          log(`❌ TXT export error: ${e.message}`, "fail");
+        }
+      }
+
+      function testExportMd() {
+        try {
+          window.ChatHistoryManager.exportAndDownloadMarkdown(true);
+          log("✅ Markdown export download triggered", "pass");
+        } catch (e) {
+          log(`❌ Markdown export error: ${e.message}`, "fail");
+        }
+      }
+
+      function testExportPdf() {
+        try {
+          window.ChatHistoryManager.exportToPDF(true);
+          log("✅ PDF export triggered", "pass");
+        } catch (e) {
+          log(`❌ PDF export error: ${e.message}`, "fail");
+        }
+      }
+
+      function runAllTests() {
+        document.getElementById("testResults").innerHTML = "";
+
+        log("🧪 Starting comprehensive test suite...", "info");
+
+        testBasicFunctionality();
+        setTimeout(() => testExportFunctionality(), 100);
+        setTimeout(() => testDataPersistence(), 200);
+
+        setTimeout(() => {
+          log("🎉 All tests completed!", "pass");
+          showStats();
+        }, 500);
+      }
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        checkSystemStatus();
+        showStats();
+        log("🚀 Chat History Test Suite ready!", "info");
+      });
+    </script>
+  </body>
+</html>

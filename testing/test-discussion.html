@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discussion Layout Test</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="chatbot-template/styles/chatbot.css" />
+    <style>
+      /* Test viewport indicators */
+      .viewport-indicator {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #1e293b;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 0.75rem;
+        z-index: 1000;
+      }
+
+      .test-controls {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        display: flex;
+        gap: 0.5rem;
+        z-index: 1000;
+      }
+
+      .test-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+      }
+
+      .test-btn:hover {
+        background: #2563eb;
+      }
+
+      /* Responsive test frames */
+      .test-frame {
+        border: 2px solid #ef4444;
+        margin: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .test-frame.mobile {
+        max-width: 480px;
+        margin: 1rem auto;
+        border-color: #f59e0b;
+      }
+
+      .test-frame.tablet {
+        max-width: 768px;
+        margin: 1rem auto;
+        border-color: #10b981;
+      }
+
+      .test-frame.desktop {
+        max-width: 1200px;
+        margin: 1rem auto;
+        border-color: #3b82f6;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Viewport Indicator -->
+    <div class="viewport-indicator" id="viewportIndicator">Loading...</div>
+
+    <!-- Test Controls -->
+    <div class="test-controls">
+      <button class="test-btn" onclick="testMobile()">📱 Mobile</button>
+      <button class="test-btn" onclick="testTablet()">📱 Tablet</button>
+      <button class="test-btn" onclick="testDesktop()">🖥️ Desktop</button>
+      <button class="test-btn" onclick="resetTest()">🔄 Reset</button>
+    </div>
+
+    <!-- Test Frame -->
+    <div class="test-frame" id="testFrame">
+      <!-- Header -->
+      <header class="scene-header">
+        <div class="header-content">
+          <h1 class="scene-title">💬 Discussion Layout Test</h1>
+          <nav class="scene-nav">
+            <button class="nav-btn">🏠 Home</button>
+            <button class="nav-btn">🔍 Test</button>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Discussion Content -->
+      <main class="discussion-container">
+        <section class="discussion-main">
+          <!-- User Side -->
+          <div class="discussion-side user-side">
+            <div class="discussion-header">
+              <h3>👤 User</h3>
+            </div>
+
+            <div class="discussion-avatar">
+              <div class="placeholder-text">
+                <span class="placeholder-icon">👤</span>
+                <div>User Avatar<br />Placeholder</div>
+              </div>
+            </div>
+
+            <div class="discussion-chat-area">
+              <div
+                style="
+                  border: 1px solid #cbd5e1;
+                  border-radius: 8px;
+                  padding: 1rem;
+                  background: #f8fafc;
+                "
+              >
+                <div style="margin-bottom: 0.5rem; font-weight: 600">
+                  Chat Input Area
+                </div>
+                <div style="color: #64748b; font-size: 0.875rem">
+                  Input placeholder for testing layout
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bot Side -->
+          <div class="discussion-side bot-side">
+            <div class="discussion-header">
+              <h3>🤖 Bot</h3>
+            </div>
+
+            <div class="discussion-avatar">
+              <div class="placeholder-text">
+                <span class="placeholder-icon">🤖</span>
+                <div>Bot Avatar<br />Placeholder</div>
+              </div>
+            </div>
+
+            <div class="discussion-chat-area">
+              <div
+                style="
+                  border: 1px solid #cbd5e1;
+                  border-radius: 8px;
+                  padding: 1rem;
+                  background: #f8fafc;
+                  flex: 1;
+                "
+              >
+                <div style="margin-bottom: 0.5rem; font-weight: 600">
+                  Chat Output Area
+                </div>
+                <div style="color: #64748b; font-size: 0.875rem">
+                  Output messages will appear here...<br />
+                  Testing multi-line content display...<br />
+                  Checking layout flexibility...
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer Test -->
+      <footer
+        style="
+          background: #1e293b;
+          color: white;
+          padding: 2rem;
+          margin-top: 2rem;
+        "
+      >
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center">
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: #e2e8f0">Navigation</h4>
+              <div style="color: #94a3b8; font-size: 0.875rem">Links here</div>
+            </div>
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: #e2e8f0">Tools</h4>
+              <div style="color: #94a3b8; font-size: 0.875rem">
+                Settings here
+              </div>
+            </div>
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: #e2e8f0">Status</h4>
+              <div style="color: #94a3b8; font-size: 0.875rem">
+                Status info here
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              border-top: 1px solid rgba(255, 255, 255, 0.1);
+              padding-top: 1rem;
+              color: #94a3b8;
+              font-size: 0.875rem;
+            "
+          >
+            Footer content responsiveness test
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      function updateViewportIndicator() {
+        const indicator = document.getElementById("viewportIndicator");
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        let device = "Desktop";
+        let color = "#3b82f6";
+
+        if (width <= 480) {
+          device = "Mobile";
+          color = "#f59e0b";
+        } else if (width <= 768) {
+          device = "Tablet";
+          color = "#10b981";
+        } else if (width <= 968) {
+          device = "Small Desktop";
+          color = "#8b5cf6";
+        }
+
+        indicator.textContent = `${device}: ${width}x${height}`;
+        indicator.style.background = color;
+      }
+
+      function testMobile() {
+        const frame = document.getElementById("testFrame");
+        frame.className = "test-frame mobile";
+        document.body.style.padding = "1rem";
+      }
+
+      function testTablet() {
+        const frame = document.getElementById("testFrame");
+        frame.className = "test-frame tablet";
+        document.body.style.padding = "1rem";
+      }
+
+      function testDesktop() {
+        const frame = document.getElementById("testFrame");
+        frame.className = "test-frame desktop";
+        document.body.style.padding = "1rem";
+      }
+
+      function resetTest() {
+        const frame = document.getElementById("testFrame");
+        frame.className = "test-frame";
+        document.body.style.padding = "0";
+      }
+
+      // Initialize
+      window.addEventListener("load", updateViewportIndicator);
+      window.addEventListener("resize", updateViewportIndicator);
+
+      console.log("📱 Discussion layout test ready");
+      console.log("🎯 Use the controls to test different viewport sizes");
+    </script>
+  </body>
+</html>

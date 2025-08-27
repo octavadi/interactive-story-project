@@ -1,0 +1,7 @@
+---
+alwaysApply: false
+---
+
+Pastikan layout dan desain memenuhi kaidah UI dan UX yang baik
+
+Pastikan tampilan dan fitur kompatibel untuk multi-browser, khususnya berdasarkan urutan prioritas: chrome, safari, edge
