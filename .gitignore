@@ -169,3 +169,6 @@ chatbot-template/config/local/
 chatbot-template/secrets/
 assets/private/
 private/
+
+# Gemini session file
+GEMINI.md
