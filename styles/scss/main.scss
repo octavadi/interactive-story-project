@@ -2,6 +2,7 @@
  * Main CSS - Styling utama untuk antarmuka chatbot
  * Menggunakan pendekatan modern dengan CSS custom properties
  */
+
 /* ===========================================
    CSS CUSTOM PROPERTIES (CSS VARIABLES)
    Centralized theming system for consistency
@@ -14,33 +15,40 @@
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
+
   /* Background colors */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
+
   /* Text colors */
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --text-muted: #94a3b8;
+
   /* Border colors */
   --border-primary: #e2e8f0;
   --border-secondary: #cbd5e1;
+
   /* Shadow */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
+
   /* Border radius */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
+
   /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.2s ease;
@@ -48,7 +56,7 @@
 }
 
 /* Dark theme */
-[data-theme=dark] {
+[data-theme="dark"] {
   --bg-primary: #1e293b;
   --bg-secondary: #334155;
   --bg-tertiary: #475569;
@@ -70,7 +78,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -303,13 +312,14 @@ body {
 .typing-dots span:nth-child(1) {
   animation-delay: -0.32s;
 }
-
 .typing-dots span:nth-child(2) {
   animation-delay: -0.16s;
 }
 
 @keyframes typing {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -318,6 +328,7 @@ body {
     opacity: 1;
   }
 }
+
 /* Action Buttons */
 .action-buttons {
   display: flex;
@@ -374,25 +385,31 @@ body {
     margin: 10px;
     border-radius: var(--radius-lg);
   }
+
   .chat-header {
     padding: var(--spacing-sm);
   }
+
   .chat-conversation {
     padding: var(--spacing-sm);
     max-height: 350px;
   }
+
   .message-bubble {
     max-width: 90%;
     padding: var(--spacing-sm);
   }
+
   .action-buttons {
     flex-direction: column;
     align-items: stretch;
   }
+
   .action-btn {
     text-align: center;
   }
 }
+
 /* Animation untuk pesan baru */
 @keyframes slideInUp {
   from {
@@ -404,6 +421,7 @@ body {
     transform: translateY(0);
   }
 }
+
 .message {
   animation: slideInUp 0.3s ease-out;
 }
@@ -422,6 +440,7 @@ body {
     --text-muted: #000000;
   }
 }
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -429,24 +448,29 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
   .typing-dots span {
     animation: none;
   }
 }
+
 /* Print styles */
 @media print {
   .chat-container {
     box-shadow: none;
     border: 1px solid #000;
   }
+
   .action-buttons,
   .menu-button {
     display: none;
   }
 }
+
 /* ===========================================
    DISCUSSION PAGE LAYOUT
    =========================================== */
+
 .discussion-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -479,12 +503,20 @@ body {
 
 .discussion-side.user-side {
   border: 2px solid var(--story-primary);
-  background: linear-gradient(145deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
 }
 
 .discussion-side.bot-side {
   border: 2px solid var(--story-accent);
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.05), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    145deg,
+    rgba(16, 185, 129, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
 }
 
 .discussion-header {
@@ -584,6 +616,7 @@ body {
 /* ===========================================
    SHARED FOOTER STYLES
    =========================================== */
+
 shared-footer {
   display: block;
   margin-top: auto;
@@ -730,67 +763,80 @@ shared-footer {
 /* ===========================================
    DISCUSSION RESPONSIVE DESIGN
    =========================================== */
+
 @media (max-width: 968px) {
   .discussion-main {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
   .discussion-side {
     min-height: 500px;
   }
+
   .discussion-avatar {
     width: 150px;
     height: 150px;
   }
+
   .footer-content {
     grid-template-columns: 1fr;
     padding: 1.5rem;
   }
 }
+
 @media (max-width: 768px) {
   .discussion-container {
     padding: 1rem;
   }
+
   .discussion-side {
     padding: 1.5rem;
   }
+
   .discussion-avatar {
     width: 120px;
     height: 120px;
   }
+
   .footer-links {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
   }
+
   .footer-btn,
   .footer-link {
     text-align: center;
     justify-content: center;
   }
 }
+
 @media (max-width: 480px) {
   .discussion-avatar {
     width: 100px;
     height: 100px;
   }
+
   .discussion-header h3 {
     font-size: 1.25rem;
   }
+
   .footer-links {
     grid-template-columns: 1fr;
   }
 }
+
 /* ===========================================
    UTILITY CLASSES
    =========================================== */
+
 /* ===========================================
    UTILITY CLASSES
    Reusable utility classes for common patterns
    =========================================== */
+
 /* Hidden file input for custom upload buttons */
 .hidden-file-input {
   display: none;
 }
-
-/*# sourceMappingURL=main.css.map */

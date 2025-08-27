@@ -2,20 +2,24 @@
    DISCUSSION PAGE REDESIGN - NEW LAYOUT
    Matching the provided mockup design
    =========================================== */
+
 /* ===========================================
    COLOR SYSTEM & DESIGN TOKENS
    =========================================== */
+
 :root {
   /* User Theme - Professional Blue */
   --user-primary: #2563eb;
   --user-primary-light: #3b82f6;
   --user-bg: rgba(37, 99, 235, 0.1);
   --user-border: rgba(37, 99, 235, 0.3);
+
   /* Bot Theme - Trustworthy Green */
   --bot-primary: #059669;
   --bot-primary-light: #10b981;
   --bot-bg: rgba(5, 150, 105, 0.1);
   --bot-border: rgba(5, 150, 105, 0.3);
+
   /* Neutral System */
   --neutral-0: #ffffff;
   --neutral-50: #f8fafc;
@@ -28,10 +32,12 @@
   --neutral-700: #334155;
   --neutral-800: #1e293b;
   --neutral-900: #0f172a;
+
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
   /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -39,18 +45,21 @@
   --space-lg: 1rem;
   --space-xl: 1.5rem;
   --space-2xl: 2rem;
+
   /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+
   /* Typography */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
+
   /* Transitions */
   --duration-fast: 0.15s;
   --duration-medium: 0.3s;
@@ -60,6 +69,7 @@
 /* ===========================================
    DISCUSSION HEADER & NAVIGATION
    =========================================== */
+
 .scene-header {
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(20px);
@@ -113,26 +123,32 @@
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
+
   /* Enhanced shadows */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
   /* Smooth interactions */
   transition: all var(--duration-medium) ease;
+
   /* Typography */
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+
   /* Touch targets */
   min-height: 44px;
   min-width: 44px;
 }
 
 .nav-btn:hover {
-  background: rgb(255, 255, 255);
+  background: rgba(255, 255, 255, 1);
   border-color: var(--user-primary);
   color: var(--user-primary);
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15), inset 0 1px 0 rgb(255, 255, 255);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .nav-btn:active {
@@ -147,7 +163,11 @@
 
 /* Enhanced send button styling */
 .stylish-send-btn {
-  background: linear-gradient(135deg, var(--user-primary), var(--user-primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--user-primary),
+    var(--user-primary-light)
+  );
   border: none;
   color: white;
   padding: 0.75rem 1.5rem;
@@ -156,23 +176,33 @@
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
+
   /* Enhanced shadows */
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
   /* Smooth interactions */
   transition: all var(--duration-medium) ease;
+
   /* Typography */
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+
   /* Touch targets */
   min-height: 44px;
   min-width: 44px;
 }
 
 .stylish-send-btn:hover {
-  background: linear-gradient(135deg, var(--user-primary-light), var(--user-primary));
+  background: linear-gradient(
+    135deg,
+    var(--user-primary-light),
+    var(--user-primary)
+  );
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .stylish-send-btn:active {
@@ -196,12 +226,15 @@
 /* ===========================================
    DISCUSSION PAGE LAYOUT
    =========================================== */
+
 .discussion-page-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
   /* Enhanced magical gradient background - lighter than index */
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+
   /* Animated background overlay */
   position: relative;
   overflow-x: hidden;
@@ -214,14 +247,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(5, 150, 105, 0.05) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(102, 126, 234, 0.03) 0%, transparent 50%);
+  background: radial-gradient(
+      circle at 20% 30%,
+      rgba(37, 99, 235, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(5, 150, 105, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(102, 126, 234, 0.03) 0%,
+      transparent 50%
+    );
   animation: backgroundShift 25s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }
 
 @keyframes backgroundShift {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: translateX(0) translateY(0);
   }
@@ -238,9 +286,11 @@
     transform: translateX(5px) translateY(-3px);
   }
 }
+
 /* ===========================================
    DISCUSSION CONTAINER & LAYOUT
    =========================================== */
+
 .discussion-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -251,6 +301,7 @@
   padding: var(--space-xl);
   position: relative;
   z-index: 1;
+
   /* Remove background since it's now handled by the page wrapper */
   background: transparent;
 }
@@ -258,16 +309,19 @@
 /* ===========================================
    DISCUSSION PANELS
    =========================================== */
+
 .discussion-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: var(--space-lg);
+
   /* Card styling - white background like the mockup */
   background: var(--neutral-0);
   border-radius: var(--radius-lg);
   border: 1px solid var(--neutral-200);
   box-shadow: var(--shadow-md);
+
   /* Smooth transitions */
   transition: all var(--duration-medium) var(--ease-out);
 }
@@ -283,6 +337,7 @@
 /* ===========================================
    PANEL HEADERS
    =========================================== */
+
 .panel-header {
   display: flex;
   align-items: flex-start;
@@ -316,11 +371,19 @@
 }
 
 .user-avatar {
-  background: linear-gradient(135deg, var(--user-primary), var(--user-primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--user-primary),
+    var(--user-primary-light)
+  );
 }
 
 .bot-avatar {
-  background: linear-gradient(135deg, var(--bot-primary), var(--bot-primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--bot-primary),
+    var(--bot-primary-light)
+  );
 }
 
 .panel-title {
@@ -352,6 +415,7 @@
 /* ===========================================
    PANEL DESCRIPTIONS
    =========================================== */
+
 .panel-description {
   font-size: var(--font-size-sm);
   color: var(--neutral-600);
@@ -366,6 +430,7 @@
 /* ===========================================
    CHAT AREAS
    =========================================== */
+
 .panel-chat-area {
   flex: 1;
   display: flex;
@@ -390,6 +455,7 @@
 /* ===========================================
    MESSAGE BUBBLES
    =========================================== */
+
 .message-bubble {
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-lg);
@@ -445,16 +511,19 @@
 /* ===========================================
    CHAT INPUT - FIXED BOTTOM
    =========================================== */
+
 .discussion-input-fixed {
   width: 100%;
   max-width: 1400px;
   margin: var(--space-xl) auto 0 auto;
   padding: var(--space-lg);
+
   /* Card styling to match panels */
   background: rgba(255, 255, 255, 0.9);
   border-radius: var(--radius-lg);
   border: 1px solid var(--neutral-200);
   box-shadow: var(--shadow-md);
+
   /* Smooth transitions */
   transition: all var(--duration-medium) var(--ease-out);
 }
@@ -512,6 +581,7 @@
 /* ===========================================
    HIDDEN FILE INPUT
    =========================================== */
+
 .hidden-file-input {
   position: absolute;
   width: 1px;
@@ -527,6 +597,7 @@
 /* ===========================================
    RESPONSIVE DESIGN
    =========================================== */
+
 /* Header responsive adjustments */
 @media (max-width: 768px) {
   .header-content {
@@ -535,72 +606,88 @@
     text-align: center;
     padding: 0 1rem;
   }
+
   .scene-title {
     font-size: 1.75rem;
   }
+
   .scene-nav {
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.75rem;
   }
+
   .nav-btn {
     padding: 0.6rem 1.25rem;
     font-size: 0.875rem;
   }
 }
+
 @media (max-width: 640px) {
   .scene-header {
     padding: 1rem 0;
   }
+
   .header-content {
     padding: 0 0.5rem;
   }
+
   .scene-title {
     font-size: 1.5rem;
   }
+
   .nav-btn {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
     min-width: auto;
   }
 }
+
 @media (max-width: 480px) {
   .nav-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
   }
 }
+
 /* ===========================================
    ACCESSIBILITY ENHANCEMENTS
    =========================================== */
+
 /* High contrast mode */
 @media (prefers-contrast: high) {
   .discussion-page-wrapper {
     background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
   }
+
   .scene-title,
   .nav-btn {
     color: #000000;
     text-shadow: none;
   }
+
   .nav-btn {
     border: 2px solid #000000;
     background: #ffffff;
   }
+
   .nav-btn:hover {
     background: #f0f0f0;
   }
 }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .discussion-page-wrapper::before {
     animation: none;
   }
+
   * {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
 }
+
 /* Focus management */
 .scene-header:focus-within,
 .discussion-container:focus-within {
@@ -611,6 +698,7 @@
 /* ===========================================
    PERFORMANCE OPTIMIZATIONS
    =========================================== */
+
 /* GPU acceleration */
 .discussion-page-wrapper,
 .scene-header,
@@ -638,71 +726,88 @@
 }
 
 /* Main responsive design */
+
 @media (max-width: 768px) {
   .discussion-container {
     grid-template-columns: 1fr;
     gap: var(--space-md);
     padding: var(--space-md);
   }
+
   .panel-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: var(--space-sm);
   }
+
   .avatar-circle {
     width: 50px;
     height: 50px;
     font-size: 20px;
   }
+
   .discussion-input-fixed {
     margin: var(--space-md) auto 0 auto;
     padding: var(--space-md);
   }
+
   .input-container {
     flex-direction: column;
     gap: var(--space-sm);
   }
+
   .message-input {
     width: 100%;
   }
+
   .send-button {
     width: 100%;
     padding: var(--space-lg);
   }
+
   .panel-chat-area {
     min-height: 250px;
   }
+
   .message-bubble {
     max-width: 95%;
   }
 }
+
 @media (max-width: 480px) {
   .discussion-container {
     padding: var(--space-sm);
   }
+
   .discussion-panel {
     padding: var(--space-md);
   }
+
   .discussion-input-fixed {
     margin: var(--space-sm) auto 0 auto;
     padding: var(--space-sm);
   }
+
   .panel-title h3 {
     font-size: var(--font-size-base);
   }
+
   .panel-description {
     font-size: var(--font-size-xs);
     padding: var(--space-sm);
   }
+
   .message-bubble {
     padding: var(--space-sm) var(--space-md);
     font-size: var(--font-size-sm);
   }
 }
+
 /* ===========================================
    ANIMATIONS
    =========================================== */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -713,6 +818,7 @@
     transform: translateY(0);
   }
 }
+
 .message-bubble {
   animation: fadeInUp 0.3s ease-out;
 }
@@ -720,6 +826,7 @@
 /* ===========================================
    TYPING INDICATOR
    =========================================== */
+
 .typing-indicator {
   padding: var(--space-md);
   margin-bottom: var(--space-sm);
@@ -765,7 +872,9 @@
 }
 
 @keyframes typing {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -774,9 +883,11 @@
     opacity: 1;
   }
 }
+
 /* ===========================================
    ACCESSIBILITY ENHANCEMENTS
    =========================================== */
+
 .panel-avatar:focus-visible {
   outline: 3px solid var(--user-primary);
   outline-offset: 4px;
@@ -801,9 +912,8 @@
   .message-bubble {
     border-width: 2px;
   }
+
   .discussion-panel {
     border-width: 2px;
   }
 }
-
-/*# sourceMappingURL=discussion.css.map */

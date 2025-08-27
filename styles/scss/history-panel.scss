@@ -2,9 +2,11 @@
    HISTORY PANEL STYLES
    Styling untuk komponen histori percakapan
    =========================================== */
+
 /* ===========================================
    HISTORY PANEL OVERLAY & LAYOUT
    =========================================== */
+
 .hidden {
   display: none !important;
 }
@@ -54,6 +56,7 @@
 /* ===========================================
    HISTORY PANEL HEADER
    =========================================== */
+
 .history-header {
   display: flex;
   justify-content: space-between;
@@ -94,6 +97,7 @@
 /* ===========================================
    HISTORY STATISTICS
    =========================================== */
+
 .history-stats {
   padding: var(--space-lg);
   background: var(--neutral-50);
@@ -139,6 +143,7 @@
 /* ===========================================
    HISTORY ACTIONS
    =========================================== */
+
 .history-actions {
   flex: 1;
   padding: var(--space-lg);
@@ -166,6 +171,7 @@
 /* ===========================================
    EXPORT OPTIONS
    =========================================== */
+
 .export-options {
   display: flex;
   flex-direction: column;
@@ -196,7 +202,7 @@
   color: var(--neutral-900);
 }
 
-.scope-selector input[type=radio] {
+.scope-selector input[type="radio"] {
   accent-color: var(--user-primary);
   transform: scale(1.1);
 }
@@ -258,6 +264,7 @@
 /* ===========================================
    MANAGE BUTTONS
    =========================================== */
+
 .manage-buttons {
   display: flex;
   flex-direction: column;
@@ -291,6 +298,7 @@
 /* ===========================================
    HISTORY PREVIEW
    =========================================== */
+
 .history-preview {
   border-top: 1px solid var(--neutral-200);
   padding: var(--space-lg);
@@ -387,16 +395,19 @@
   margin: 0;
   cursor: help;
   position: relative;
+
   /* Cross-browser word wrapping */
   word-wrap: break-word;
   overflow-wrap: break-word;
   -ms-word-break: break-all;
   word-break: break-word;
+
   /* Better text rendering for Edge/IE */
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
+
   /* Ensure proper whitespace handling */
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
@@ -459,46 +470,49 @@
 }
 
 /* User message styling */
-.preview-message[data-speaker=user] .speaker-icon {
+.preview-message[data-speaker="user"] .speaker-icon {
   background: var(--user-bg);
   color: var(--user-primary);
 }
 
-.preview-message[data-speaker=user] .preview-text {
+.preview-message[data-speaker="user"] .preview-text {
   border-left-color: var(--user-primary);
 }
 
-.preview-message[data-speaker=user] .preview-text:hover {
+.preview-message[data-speaker="user"] .preview-text:hover {
   border-left-color: var(--user-primary-light);
 }
 
 /* Bot message styling */
-.preview-message:not([data-speaker=user]) .speaker-icon {
+.preview-message:not([data-speaker="user"]) .speaker-icon {
   background: var(--bot-bg);
   color: var(--bot-primary);
 }
 
-.preview-message:not([data-speaker=user]) .preview-text {
+.preview-message:not([data-speaker="user"]) .preview-text {
   border-left-color: var(--bot-primary);
 }
 
-.preview-message:not([data-speaker=user]) .preview-text:hover {
+.preview-message:not([data-speaker="user"]) .preview-text:hover {
   border-left-color: var(--bot-primary-light);
 }
 
 /* ===========================================
    BROWSER COMPATIBILITY
    =========================================== */
+
 /* Edge/IE specific fixes */
 @supports (-ms-accelerator: true) {
   .preview-text {
     white-space: normal;
     word-break: break-word;
   }
+
   .preview-message {
     display: block;
   }
 }
+
 /* Safari specific fixes */
 @supports (-webkit-appearance: none) {
   .preview-text {
@@ -507,6 +521,7 @@
     -webkit-text-size-adjust: none;
   }
 }
+
 /* Ensure consistent text rendering across browsers */
 .preview-text,
 .speaker-name,
@@ -517,73 +532,91 @@
 }
 
 /* Edge-specific markdown cleanup styles */
-.preview-text[data-cleaned=true] {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+.preview-text[data-cleaned="true"] {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
 }
 
 /* ===========================================
    RESPONSIVE DESIGN
    =========================================== */
+
 @media (max-width: 768px) {
   .history-panel {
     width: 100%;
     right: 0;
     border-left: none;
   }
+
   .history-header {
     padding: var(--space-lg);
   }
+
   .history-stats {
     padding: var(--space-md);
   }
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: var(--space-sm);
   }
+
   .history-actions {
     padding: var(--space-md);
     gap: var(--space-lg);
   }
+
   .scope-selector {
     flex-direction: column;
     gap: var(--space-sm);
   }
+
   .export-buttons {
     gap: var(--space-xs);
   }
+
   .export-btn {
     padding: var(--space-lg);
     font-size: var(--font-size-base);
   }
+
   .history-preview {
     padding: var(--space-md);
   }
+
   .preview-header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-xs);
   }
+
   .preview-time {
     align-self: flex-end;
   }
+
   .speaker-icon {
     width: 18px;
     height: 18px;
     font-size: var(--font-size-sm);
   }
+
   .preview-text {
     padding: var(--space-sm);
     font-size: var(--font-size-xs);
   }
+
   .settings-container {
     gap: var(--space-sm);
   }
+
   .setting-item {
     padding: var(--space-sm);
   }
+
   .setting-item label {
     font-size: var(--font-size-xs);
   }
+
   .storage-warning-notification {
     position: fixed;
     top: 10px;
@@ -592,33 +625,41 @@
     max-width: none;
   }
 }
+
 @media (max-width: 480px) {
   .history-header h3 {
     font-size: var(--font-size-lg);
   }
+
   .close-btn {
     width: 28px;
     height: 28px;
     font-size: var(--font-size-base);
   }
+
   .action-group h4 {
     font-size: var(--font-size-base);
   }
+
   .stat-item {
     padding: var(--space-sm);
   }
+
   .export-btn {
     padding: var(--space-md);
     font-size: var(--font-size-sm);
   }
+
   .manage-btn {
     padding: var(--space-md);
     font-size: var(--font-size-sm);
   }
 }
+
 /* ===========================================
    ACCESSIBILITY & INTERACTIONS
    =========================================== */
+
 .export-btn:focus-visible,
 .manage-btn:focus-visible,
 .close-btn:focus-visible {
@@ -626,7 +667,7 @@
   outline-offset: 2px;
 }
 
-.scope-selector input[type=radio]:focus-visible {
+.scope-selector input[type="radio"]:focus-visible {
   outline: 2px solid var(--user-primary);
   outline-offset: 2px;
 }
@@ -636,15 +677,18 @@
   .history-panel {
     border-left-width: 3px;
   }
+
   .stat-item,
   .preview-message {
     border-width: 2px;
   }
+
   .export-btn,
   .manage-btn {
     border-width: 2px;
   }
 }
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .history-panel,
@@ -655,9 +699,11 @@
     transition: none;
   }
 }
+
 /* ===========================================
    ANIMATIONS
    =========================================== */
+
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
@@ -666,6 +712,7 @@
     transform: translateX(0);
   }
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -674,6 +721,7 @@
     opacity: 1;
   }
 }
+
 .history-panel:not(.hidden) {
   animation: slideInRight 0.3s ease-out;
 }
@@ -685,6 +733,7 @@
 /* ===========================================
    CUSTOM SCROLLBAR FOR PREVIEW
    =========================================== */
+
 .preview-content::-webkit-scrollbar,
 .history-actions::-webkit-scrollbar {
   width: 6px;
@@ -710,6 +759,7 @@
 /* ===========================================
    DATA MANAGEMENT STYLES
    =========================================== */
+
 .settings-container {
   display: flex;
   flex-direction: column;
@@ -736,12 +786,12 @@
   cursor: pointer;
 }
 
-.setting-item input[type=checkbox] {
+.setting-item input[type="checkbox"] {
   accent-color: var(--user-primary);
   transform: scale(1.2);
 }
 
-.setting-item input[type=number] {
+.setting-item input[type="number"] {
   padding: var(--space-sm);
   border: 1px solid var(--neutral-300);
   border-radius: var(--radius-sm);
@@ -847,9 +897,11 @@
     opacity: 1;
   }
 }
+
 /* ===========================================
    MESSAGE MODAL STYLES
    =========================================== */
+
 .message-modal-overlay {
   position: fixed;
   top: 0;
@@ -999,6 +1051,7 @@
 /* ===========================================
    LOADING STATES
    =========================================== */
+
 .export-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -1029,5 +1082,3 @@
     transform: rotate(360deg);
   }
 }
-
-/*# sourceMappingURL=history-panel.css.map */

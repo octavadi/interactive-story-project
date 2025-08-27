@@ -172,3 +172,6 @@ private/
 
 # Gemini session file
 GEMINI.md
+
+# Build artifacts
+*.css.map

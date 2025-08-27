@@ -1,6 +1,7 @@
 /* ===========================================
    CHATBOT BUTTON & TOOLTIP STYLES
    =========================================== */
+
 /* Chatbot Button - Touch-friendly design */
 .floating-chatbot-btn {
   position: fixed; /* Always fixed regardless of scrolling */
@@ -24,6 +25,7 @@
   overflow: visible;
   padding: 0;
   outline: none;
+
   /* Enhanced accessibility */
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -33,7 +35,8 @@
 /* Button hover effect */
 .floating-chatbot-btn:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25), 0 6px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25),
+    0 6px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* Button active effect */
@@ -88,6 +91,7 @@
     opacity: 0;
   }
 }
+
 /* Comic-style speech bubble tooltip */
 .chatbot-tooltip {
   position: absolute;
@@ -98,7 +102,8 @@
   color: #333;
   padding: 1em 1.4em;
   border-radius: 1.2em;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 2px 0 #f7d774, inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 2px 0 #f7d774,
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   font-weight: 500;
   font-family: "Comic Sans MS", "Comic Neue", Arial, sans-serif;
@@ -107,7 +112,8 @@
   text-align: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s cubic-bezier(0.4, 2, 0.6, 1), transform 0.25s cubic-bezier(0.4, 2, 0.6, 1), visibility 0.25s;
+  transition: opacity 0.25s cubic-bezier(0.4, 2, 0.6, 1),
+    transform 0.25s cubic-bezier(0.4, 2, 0.6, 1), visibility 0.25s;
   pointer-events: none;
   z-index: 10000;
   line-height: 1.5;
@@ -148,6 +154,7 @@
     transform: rotate(0deg);
   }
 }
+
 /* Speech bubble arrow */
 .chatbot-tooltip::after {
   content: "";
@@ -181,7 +188,8 @@
   opacity: 1;
   visibility: visible;
   transform: translateX(-20%) scale(1);
-  animation: balloonPop 0.5s cubic-bezier(0.4, 2, 0.6, 1), floatBubble 3s ease-in-out infinite 0.5s;
+  animation: balloonPop 0.5s cubic-bezier(0.4, 2, 0.6, 1),
+    floatBubble 3s ease-in-out infinite 0.5s;
 }
 
 /* Balloon pop animation */
@@ -199,6 +207,7 @@
     transform: translateX(-20%) scale(1);
   }
 }
+
 /* Floating bubble animation */
 @keyframes floatBubble {
   0% {
@@ -211,6 +220,7 @@
     transform: translateX(-20%) translateY(0);
   }
 }
+
 /* Pulse animation for text inside tooltip */
 .chatbot-tooltip.is-visible::after {
   animation: arrowPulse 2s ease-in-out infinite;
@@ -227,6 +237,7 @@
     transform: translateX(0) translateY(0);
   }
 }
+
 /* Mobile-first responsive styles with touch optimization */
 @media (max-width: 768px) {
   .floating-chatbot-btn {
@@ -238,10 +249,12 @@
     bottom: max(2rem, env(safe-area-inset-bottom, 1rem));
     right: max(2rem, env(safe-area-inset-right, 1rem));
   }
+
   .chatbot-icon {
     width: 28px;
     height: 28px;
   }
+
   /* Reduce tooltip size for tablet */
   .chatbot-tooltip {
     font-size: 0.9rem;
@@ -250,6 +263,7 @@
     padding: 0.7em 1em;
   }
 }
+
 @media (max-width: 480px) {
   .floating-chatbot-btn {
     /* Maintain minimum touch target */
@@ -260,15 +274,19 @@
     bottom: 1.5rem;
     right: 1.5rem;
     /* Enhanced safe area support */
-    bottom: max(1.5rem, env(safe-area-inset-bottom, 1rem) + 0.5rem);
-    right: max(1.5rem, env(safe-area-inset-right, 1rem) + 0.5rem);
+    bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 1rem) + 0.5rem));
+    right: max(1.5rem, calc(env(safe-area-inset-right, 1rem) + 0.5rem));
+
     /* More prominent shadow on small screens */
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25), 0 3px 10px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25),
+      0 3px 10px rgba(102, 126, 234, 0.4);
   }
+
   .chatbot-icon {
     width: 26px;
     height: 26px;
   }
+
   /* Simplified tooltip for small screens */
   .chatbot-tooltip {
     font-size: 0.8rem;
@@ -278,49 +296,57 @@
     /* Position adjustment for small screens */
     bottom: 120%;
   }
+
   /* Reduce pulse animation on mobile to save battery */
   .btn-pulse {
     animation-duration: 3s;
   }
 }
+
 @media (max-width: 360px) {
   .floating-chatbot-btn {
     width: 48px;
     height: 48px;
     bottom: 1rem;
     right: 1rem;
-    bottom: max(1rem, env(safe-area-inset-bottom, 0.5rem) + 0.5rem);
-    right: max(1rem, env(safe-area-inset-right, 0.5rem) + 0.5rem);
+    bottom: max(1rem, calc(env(safe-area-inset-bottom, 0.5rem) + 0.5rem));
+    right: max(1rem, calc(env(safe-area-inset-right, 0.5rem) + 0.5rem));
   }
+
   .chatbot-icon {
     width: 24px;
     height: 24px;
   }
+
   /* Hide tooltip on extra small screens */
   .chatbot-tooltip {
     display: none;
   }
 }
+
 /* iOS specific optimizations */
 @supports (-webkit-touch-callout: none) {
   .floating-chatbot-btn {
     /* iOS safe area optimizations */
-    bottom: max(2.5rem, env(safe-area-inset-bottom) + 1rem);
-    right: max(2.5rem, env(safe-area-inset-right) + 1rem);
+    bottom: max(2.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+    right: max(2.5rem, calc(env(safe-area-inset-right) + 1rem));
   }
+
   @media (max-width: 768px) {
     .floating-chatbot-btn {
-      bottom: max(2rem, env(safe-area-inset-bottom) + 0.5rem);
-      right: max(2rem, env(safe-area-inset-right) + 0.5rem);
+      bottom: max(2rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+      right: max(2rem, calc(env(safe-area-inset-right) + 0.5rem));
     }
   }
+
   @media (max-width: 480px) {
     .floating-chatbot-btn {
-      bottom: max(1.5rem, env(safe-area-inset-bottom) + 0.5rem);
-      right: max(1.5rem, env(safe-area-inset-right) + 0.5rem);
+      bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+      right: max(1.5rem, calc(env(safe-area-inset-right) + 0.5rem));
     }
   }
 }
+
 /* Landscape phone optimization */
 @media (max-height: 500px) and (orientation: landscape) {
   .floating-chatbot-btn {
@@ -329,14 +355,14 @@
     bottom: 1rem;
     right: 1rem;
   }
+
   .chatbot-icon {
     width: 22px;
     height: 22px;
   }
+
   /* Hide tooltip in landscape mode */
   .chatbot-tooltip {
     display: none;
   }
 }
-
-/*# sourceMappingURL=chatbot-button.css.map */
