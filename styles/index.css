@@ -670,27 +670,26 @@
   position: fixed;
   z-index: 1000;
   right: 2.5rem;
-  /* Position it neatly above the button (64px button height + 1rem gap) */
-  bottom: calc(2.5rem + 64px + 1rem); 
-  top: 4rem; /* Set top constraint to stretch the window */
+  bottom: calc(2.5rem + 64px + 1rem);
+  top: 4rem;
   
   /* Sizing */
   width: 370px;
   max-width: calc(100vw - 2rem);
-  /* max-height is removed to allow stretching */
   
   /* Visuals */
-  background: rgba(30, 41, 59, 0.75); /* Glassmorphism background */
+  background: rgba(30, 41, 59, 0.85);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(102, 126, 234, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
   
-  /* Layout inside */
+  /* NEW: Parent container handles padding and gap */
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  padding: 0.75rem;
+  gap: 0.75rem;
 
   /* Initial state for animation (hidden) */
   opacity: 0;
@@ -708,13 +707,19 @@
   pointer-events: auto;
 }
 
-/* Close button for floating chat */
-.floating-chat-close {
+/* Action buttons inside the floating chat window */
+.floating-chat-actions {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 26px;
-  height: 26px;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.floating-chat-btn {
+  width: 28px;
+  height: 28px;
   background: rgba(102, 126, 234, 0.2);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 50%;
@@ -722,34 +727,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   transition: all 0.2s ease;
-  z-index: 10;
   padding: 0;
 }
 
-.floating-chat-close:hover {
+.floating-chat-btn:hover {
   background: rgba(102, 126, 234, 0.4);
   color: rgba(255, 255, 255, 1);
   transform: scale(1.05);
 }
 
-/* Chat output section - larger area for story responses */
+/* Chat output section - UPDATED FOR FIXED HEIGHT */
 .index-chat-output-section {
-  order: 1;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  flex: 1; /* KEY: This makes it grow */
+  min-height: 0; /* Necessary for flexbox */
+  overflow-y: auto; /* Allow content to scroll */
+  background: rgba(15, 23, 42, 0.6); /* Subtle background to show its area */
+  border-radius: 10px;
+  padding: 0.75rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(102, 126, 234, 0.4) transparent;
-  margin-bottom: 0; /* Remove margin to connect with input section */
-  border-bottom-left-radius: 0; /* Connect with input section */
-  border-bottom-right-radius: 0; /* Connect with input section */
 }
 
 .index-chat-output-section::-webkit-scrollbar {
-  width: 4px; /* Thinner scrollbar */
+  width: 4px;
 }
 
 .index-chat-output-section::-webkit-scrollbar-track {
@@ -757,7 +760,7 @@
 }
 
 .index-chat-output-section::-webkit-scrollbar-thumb {
-  background: rgba(102, 126, 234, 0.4); /* Match theme color */
+  background: rgba(102, 126, 234, 0.4);
   border-radius: 4px;
 }
 
@@ -765,38 +768,10 @@
   background: rgba(102, 126, 234, 0.6);
 }
 
-/* Chat input section - compact area for user input */
+/* Chat input section - UPDATED FOR NEW LAYOUT */
 .index-chat-input-section {
-  order: 2;
-  flex-shrink: 0;
-  min-height: 80px; /* Reduced height */
-  max-height: 120px; /* Reduced max height */
-  margin-top: 0; /* Remove margin to connect with output section */
-  border-top-left-radius: 0; /* Connect with output section */
-  border-top-right-radius: 0; /* Connect with output section */
-  border-top: 1px solid rgba(102, 126, 234, 0.2); /* Subtle separator */
-}
-
-/* Shared styles for both sections - more unified look */
-.index-chat-output-section,
-.index-chat-input-section {
-  background: rgba(30, 41, 59, 0.7); /* Slightly lighter than container */
-  border-radius: 12px; /* Consistent radius */
-  padding: 0.75rem; /* Reduced padding */
-
-  /* Subtle shadows */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  /* Smooth interactions */
-  transition: all var(--story-duration-medium) var(--story-ease-smooth);
-}
-
-/* Remove hover effects for more consistent UI */
-.index-chat-output-section:hover,
-.index-chat-input-section:hover {
-  background: rgba(30, 41, 59, 0.7); /* Keep same background */
-  transform: none; /* No movement on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Keep same shadow */
+  flex-shrink: 0; /* Prevent this from shrinking */
+  /* The <chat-input> component itself will have its own style */
 }
 
 .index-chat-output-section h3 {

@@ -138,15 +138,26 @@
       aria-hidden="true"
     >
       <!-- Close button for floating chat -->
-      <button
-        class="floating-chat-close"
-        id="closeChatBtn"
-        type="button"
-        aria-label="Tutup panel chat"
-        title="Tutup panel chat (Escape)"
-      >
-        <span aria-hidden="true">✕</span>
-      </button>
+      <div class="floating-chat-actions">
+        <button
+          class="floating-chat-btn"
+          id="clearChatBtn"
+          type="button"
+          aria-label="Bersihkan riwayat chat"
+          title="Bersihkan riwayat chat"
+        >
+          <span aria-hidden="true">🗑️</span>
+        </button>
+        <button
+          class="floating-chat-btn"
+          id="closeChatBtn"
+          type="button"
+          aria-label="Tutup panel chat"
+          title="Tutup panel chat (Escape)"
+        >
+          <span aria-hidden="true">✕</span>
+        </button>
+      </div>
 
       <!-- Chat Output Section (AI Responses) -->
       <section
@@ -247,6 +258,9 @@
 
         // Setup chat close button functionality
         setupChatCloseButton();
+
+        // Setup clear chat button functionality
+        setupClearChatButton();
 
         // Show tooltip on page load with a slight delay
         setTimeout(() => {
@@ -595,6 +609,49 @@
             btn.style.transform = "";
           }, 150);
         }
+      }
+
+      /**
+       * Handle clear chat button click
+       */
+      function handleClearChat(event) {
+        console.log("🗑️ Chat clear button clicked!");
+
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        if (window.chatbotApp && window.chatbotApp.chatManager) {
+          window.chatbotApp.chatManager.clearMessageHistory();
+          console.log("💬 Chat history cleared.");
+          
+          // Optional: Visual feedback
+          const btn = document.querySelector("#clearChatBtn");
+          if (btn) {
+            btn.style.transform = "scale(0.9)";
+            setTimeout(() => {
+              btn.style.transform = "";
+            }, 150);
+          }
+        } else {
+          console.error("❌ ChatManager not available to clear history.");
+        }
+      }
+
+      /**
+       * Setup clear chat button
+       */
+      function setupClearChatButton() {
+        console.log("🔧 Setting up clear chat button...");
+        const clearBtn = document.querySelector("#clearChatBtn");
+        if (!clearBtn) {
+          console.warn("⚠️ Clear chat button not found, retrying in 500ms...");
+          setTimeout(setupClearChatButton, 500);
+          return;
+        }
+        clearBtn.addEventListener("click", handleClearChat);
+        console.log("✅ Clear chat button event listener added successfully");
       }
 
       /**
