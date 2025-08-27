@@ -42,10 +42,11 @@ class ChatOutput extends HTMLElement {
                 .output-container {
                     max-height: 400px;
                     overflow-y: auto;
-                    padding: 16px;
-                    background: #f9fafb;
+                    padding: 12px;
+                    background: #0f172a;
+                    color: #f8fafc;
                     border-radius: 8px;
-                    margin: 16px 0;
+                    margin: 12px 0;
                 }
 
                 .message-item {
@@ -74,44 +75,44 @@ class ChatOutput extends HTMLElement {
                 }
 
                 .message-content {
-                    background: #ffffff;
-                    padding: 12px 16px;
-                    border-radius: 12px;
-                    border: 1px solid #e5e7eb;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    background: #1e293b;
+                    padding: 10px 14px;
+                    border-radius: 8px;
                     word-wrap: break-word;
                     line-height: 1.5;
-                    color: #1f2937;
-                    font-weight: 500;
+                    color: #f1f5f9;
+                    font-weight: 400;
                     text-align: left;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
                 }
 
                 .message-content.ai {
-                    background: #f0f9ff;
-                    border-color: #0ea5e9;
-                    color: #1f2937;
+                    background: #0f172a;
+                    color: #e2e8f0;
+                    border-left: 2px solid #0ea5e9;
                 }
 
                 .message-content.user {
-                    background: #fef3c7;
-                    border-color: #f59e0b;
-                    color: #1f2937;
+                    background: #1e293b;
+                    color: #f8fafc;
+                    border-left: 2px solid #f59e0b;
                 }
 
                 .message-content.error {
-                    background: #fef2f2;
-                    border-color: #ef4444;
-                    color: #dc2626;
+                    background: #450a0a;
+                    color: #fecaca;
+                    border-left: 2px solid #ef4444;
                 }
 
                 .typing-indicator {
                     display: flex;
                     align-items: center;
                     gap: 4px;
-                    padding: 12px 16px;
-                    background: #f0f9ff;
-                    border-radius: 12px;
-                    border: 1px solid #0ea5e9;
+                    padding: 10px 14px;
+                    background: #0f172a;
+                    border-radius: 8px;
+                    border-left: 2px solid #0ea5e9;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
                 }
 
                 .typing-dots {
@@ -120,11 +121,12 @@ class ChatOutput extends HTMLElement {
                 }
 
                 .typing-dots span {
-                    width: 8px;
-                    height: 8px;
+                    width: 6px;
+                    height: 6px;
                     background: #0ea5e9;
                     border-radius: 50%;
                     animation: typing 1.4s infinite ease-in-out;
+                    opacity: 0.8;
                 }
 
                 .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
@@ -132,9 +134,10 @@ class ChatOutput extends HTMLElement {
 
                 .empty-state {
                     text-align: center;
-                    color: #9ca3af;
+                    color: #94a3b8;
                     font-style: italic;
-                    padding: 32px 16px;
+                    padding: 24px 16px;
+                    font-size: 0.9rem;
                 }
 
                 .webhook-status {

@@ -548,6 +548,16 @@ Attempted URLs: ${attemptedUrls.join(", ")}
       } else if (responseData && typeof responseData === "object") {
         // Try different property names that n8n might use
         extractedMessage =
+          // n8n Cloud specific response formats
+          (responseData.data && responseData.data.message) ||
+          (responseData.data && responseData.data.text) ||
+          (responseData.data && responseData.data.response) ||
+          (responseData.data && responseData.data.content) ||
+          (responseData.data && responseData.data.output) ||
+          (responseData.data &&
+            typeof responseData.data === "string" &&
+            responseData.data) ||
+          // Direct properties (n8n local format)
           responseData.message ||
           responseData.text ||
           responseData.content ||
@@ -556,14 +566,30 @@ Attempted URLs: ${attemptedUrls.join(", ")}
           responseData.aiResponse ||
           responseData.chatOutput ||
           responseData.result ||
-          (responseData.data && responseData.data.message) ||
-          (responseData.data && responseData.data.text) ||
+          // Special handling for n8n cloud success response
+          (responseData.success &&
+            responseData.status &&
+            "Pesan diterima, tapi tidak ada respons dari bot. Periksa konfigurasi n8n Anda.") ||
+          // Last resort - stringify the object
           JSON.stringify(responseData); // Fallback to JSON string
       } else {
         extractedMessage = String(responseData || "Response tidak valid");
       }
 
       console.log("Extracted message:", extractedMessage);
+
+      // Jika respons hanya berisi status sukses tanpa konten pesan yang sebenarnya
+      if (
+        extractedMessage.includes('{"success":true,"status":') ||
+        extractedMessage ===
+          "Pesan diterima, tapi tidak ada respons dari bot. Periksa konfigurasi n8n Anda."
+      ) {
+        console.warn(
+          "⚠️ Webhook hanya mengembalikan status sukses tanpa konten pesan"
+        );
+        extractedMessage =
+          "⚠️ Webhook berhasil dipanggil, tetapi tidak mengembalikan pesan. Pastikan workflow n8n Anda dikonfigurasi untuk mengembalikan respons dengan format yang benar.";
+      }
 
       const messageData = {
         message: extractedMessage,

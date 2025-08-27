@@ -4,7 +4,7 @@
 
 /* Chatbot Button - Touch-friendly design */
 .floating-chatbot-btn {
-  position: fixed;
+  position: fixed; /* Always fixed regardless of scrolling */
   bottom: 2.5rem;
   right: 2.5rem;
   /* Touch-friendly minimum size */
@@ -25,7 +25,7 @@
   overflow: visible;
   padding: 0;
   outline: none;
-  
+
   /* Enhanced accessibility */
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -96,14 +96,16 @@
 .chatbot-tooltip {
   position: absolute;
   bottom: 110%;
-  left: 50%;
-  transform: translateX(-50%) scale(0.8);
-  background: #fffbe7;
+  right: 0; /* Align to right instead of center */
+  transform: translateX(-20%) scale(0.8); /* Adjust transform to move tooltip more to the left */
+  background: linear-gradient(to bottom, #fffdf2, #fffbe7);
   color: #333;
-  padding: 0.8em 1.2em;
+  padding: 1em 1.4em;
   border-radius: 1.2em;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1.5px 0 #f7d774;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 2px 0 #f7d774,
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   font-size: 1rem;
+  font-weight: 500;
   font-family: "Comic Sans MS", "Comic Neue", Arial, sans-serif;
   min-width: 180px;
   max-width: 240px;
@@ -114,7 +116,43 @@
     transform 0.25s cubic-bezier(0.4, 2, 0.6, 1), visibility 0.25s;
   pointer-events: none;
   z-index: 10000;
-  line-height: 1.4;
+  line-height: 1.5;
+  border: 1px solid rgba(247, 215, 116, 0.5);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Emoji wave animation */
+.emoji-wave {
+  display: inline-block;
+  animation: waveEmoji 2.5s ease-in-out infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes waveEmoji {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 /* Speech bubble arrow */
@@ -122,35 +160,81 @@
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 20%; /* Position arrow more to the right */
+  transform: translateX(0); /* Remove X translation */
   border-width: 12px 14px 0 14px;
   border-style: solid;
   border-color: #fffbe7 transparent transparent transparent;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.08));
 }
 
+/* Speech bubble extra decorations */
+.chatbot-tooltip::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 20%;
+  transform: translateX(0);
+  border-width: 14px 16px 0 16px;
+  border-style: solid;
+  border-color: rgba(247, 215, 116, 0.5) transparent transparent transparent;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.05));
+  z-index: -1;
+  margin-top: 1px;
+}
+
 /* Visible tooltip state */
 .chatbot-tooltip.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) scale(1);
-  animation: balloonPop 0.35s cubic-bezier(0.4, 2, 0.6, 1);
+  transform: translateX(-20%) scale(1);
+  animation: balloonPop 0.5s cubic-bezier(0.4, 2, 0.6, 1),
+    floatBubble 3s ease-in-out infinite 0.5s;
 }
 
 /* Balloon pop animation */
 @keyframes balloonPop {
   0% {
     opacity: 0;
-    transform: translateX(-50%) scale(0.7);
+    transform: translateX(-20%) scale(0.7);
   }
   70% {
     opacity: 1;
-    transform: translateX(-50%) scale(1.08);
+    transform: translateX(-20%) scale(1.08);
   }
   100% {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(-20%) scale(1);
+  }
+}
+
+/* Floating bubble animation */
+@keyframes floatBubble {
+  0% {
+    transform: translateX(-20%) translateY(0);
+  }
+  50% {
+    transform: translateX(-20%) translateY(-6px);
+  }
+  100% {
+    transform: translateX(-20%) translateY(0);
+  }
+}
+
+/* Pulse animation for text inside tooltip */
+.chatbot-tooltip.is-visible::after {
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(0) translateY(2px);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
   }
 }
 
@@ -170,7 +254,7 @@
     width: 28px;
     height: 28px;
   }
-  
+
   /* Reduce tooltip size for tablet */
   .chatbot-tooltip {
     font-size: 0.9rem;
@@ -192,9 +276,10 @@
     /* Enhanced safe area support */
     bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 1rem) + 0.5rem));
     right: max(1.5rem, calc(env(safe-area-inset-right, 1rem) + 0.5rem));
-    
+
     /* More prominent shadow on small screens */
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25), 0 3px 10px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25),
+      0 3px 10px rgba(102, 126, 234, 0.4);
   }
 
   .chatbot-icon {
@@ -211,7 +296,7 @@
     /* Position adjustment for small screens */
     bottom: 120%;
   }
-  
+
   /* Reduce pulse animation on mobile to save battery */
   .btn-pulse {
     animation-duration: 3s;
@@ -232,7 +317,7 @@
     width: 24px;
     height: 24px;
   }
-  
+
   /* Hide tooltip on extra small screens */
   .chatbot-tooltip {
     display: none;
@@ -246,14 +331,14 @@
     bottom: max(2.5rem, calc(env(safe-area-inset-bottom) + 1rem));
     right: max(2.5rem, calc(env(safe-area-inset-right) + 1rem));
   }
-  
+
   @media (max-width: 768px) {
     .floating-chatbot-btn {
       bottom: max(2rem, calc(env(safe-area-inset-bottom) + 0.5rem));
       right: max(2rem, calc(env(safe-area-inset-right) + 0.5rem));
     }
   }
-  
+
   @media (max-width: 480px) {
     .floating-chatbot-btn {
       bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
@@ -270,12 +355,12 @@
     bottom: 1rem;
     right: 1rem;
   }
-  
+
   .chatbot-icon {
     width: 22px;
     height: 22px;
   }
-  
+
   /* Hide tooltip in landscape mode */
   .chatbot-tooltip {
     display: none;

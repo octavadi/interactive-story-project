@@ -707,38 +707,6 @@
   pointer-events: auto;
 }
 
-/* Action buttons inside the floating chat window */
-.floating-chat-actions {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-}
-
-.floating-chat-btn {
-  width: 28px;
-  height: 28px;
-  background: rgba(102, 126, 234, 0.2);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.floating-chat-btn:hover {
-  background: rgba(102, 126, 234, 0.4);
-  color: rgba(255, 255, 255, 1);
-  transform: scale(1.05);
-}
-
 /* Chat output section - UPDATED FOR FIXED HEIGHT */
 .index-chat-output-section {
   flex: 1; /* KEY: This makes it grow */

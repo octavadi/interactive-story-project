@@ -137,27 +137,8 @@
       aria-label="Panel chat interaktif"
       aria-hidden="true"
     >
-      <!-- Close button for floating chat -->
-      <div class="floating-chat-actions">
-        <button
-          class="floating-chat-btn"
-          id="clearChatBtn"
-          type="button"
-          aria-label="Bersihkan riwayat chat"
-          title="Bersihkan riwayat chat"
-        >
-          <span aria-hidden="true">🗑️</span>
-        </button>
-        <button
-          class="floating-chat-btn"
-          id="closeChatBtn"
-          type="button"
-          aria-label="Tutup panel chat"
-          title="Tutup panel chat (Escape)"
-        >
-          <span aria-hidden="true">✕</span>
-        </button>
-      </div>
+      <!-- Action buttons component -->
+      <bot-actions></bot-actions>
 
       <!-- Chat Output Section (AI Responses) -->
       <section
@@ -232,6 +213,7 @@
     <script src="chatbot-template/js/chat-manager.js"></script>
     <script src="chatbot-template/components/chat-input.js"></script>
     <script src="chatbot-template/components/chat-output.js"></script>
+    <script src="chatbot-template/components/bot-actions.js"></script>
     <!-- Essential chatbot components only - removed unused scripts -->
     <script src="chatbot-template/examples/example-configs.js"></script>
 
@@ -256,11 +238,8 @@
         // Setup floating chatbot button functionality
         setupFloatingChatbotButton();
 
-        // Setup chat close button functionality
-        setupChatCloseButton();
-
-        // Setup clear chat button functionality
-        setupClearChatButton();
+        // Setup listeners for actions from the <bot-actions> component
+        setupChatActionsListener();
 
         // Show tooltip on page load with a slight delay
         setTimeout(() => {
@@ -543,115 +522,57 @@
       }
 
       /**
-       * Setup chat close button
+       * Setup listeners for events from the <bot-actions> component
        */
-      function setupChatCloseButton() {
-        console.log("🔧 Setting up chat close button...");
-        const closeBtn = document.querySelector("#closeChatBtn");
-        console.log("🔍 Found close button:", closeBtn);
-
-        if (!closeBtn) {
-          console.warn("⚠️ Close button not found, retrying in 500ms...");
-          setTimeout(setupChatCloseButton, 500);
+      function setupChatActionsListener() {
+        console.log("🔧 Setting up chat action listeners...");
+        const chatContainer = document.querySelector("#chatContainer");
+        if (!chatContainer) {
+          console.warn("⚠️ Chat container not found for action listeners, retrying...");
+          setTimeout(setupChatActionsListener, 500);
           return;
         }
 
-        closeBtn.addEventListener("click", handleChatClose);
+        chatContainer.addEventListener('close-chat-requested', handleChatClose);
+        chatContainer.addEventListener('clear-chat-requested', handleClearChat);
 
-        // Add keyboard support for close button
-        closeBtn.addEventListener("keydown", function (event) {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            handleChatClose(event);
-          }
-        });
-
-        console.log("✅ Chat close button event listener added successfully");
+        console.log("✅ Chat action listeners added successfully");
       }
 
       /**
-       * Handle chat close button click
+       * Handle chat close button click (triggered by event)
        */
       function handleChatClose(event) {
-        console.log("❌ Chat close button clicked!");
+        console.log("❌ 'close-chat-requested' event received!");
 
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        // Hide floating chat container (no layout changes needed)
+        // Hide floating chat container
         const chatContainer = document.querySelector("#chatContainer");
-
         if (chatContainer) {
           chatContainer.classList.remove("show");
           chatContainer.setAttribute("aria-hidden", "true");
 
-          // Update button ARIA state
           const chatbotBtn = document.querySelector(".floating-chatbot-btn");
           if (chatbotBtn) {
             chatbotBtn.setAttribute("aria-expanded", "false");
-            // Return focus to chatbot button
             chatbotBtn.focus();
           }
-
           console.log("💬 Floating chat panel closed");
-
-          // Show tooltip again when chat is closed
-          showChatbotTooltip();
-        }
-
-        // Visual feedback
-        const btn = document.querySelector("#closeChatBtn");
-        if (btn) {
-          btn.style.transform = "scale(0.9)";
-          setTimeout(() => {
-            btn.style.transform = "";
-          }, 150);
         }
       }
 
       /**
-       * Handle clear chat button click
+       * Handle clear chat button click (triggered by event)
        */
       function handleClearChat(event) {
-        console.log("🗑️ Chat clear button clicked!");
+        console.log("🗑️ 'clear-chat-requested' event received!");
 
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        if (window.chatbotApp && window.chatbotApp.chatManager) {
-          window.chatbotApp.chatManager.clearMessageHistory();
-          console.log("💬 Chat history cleared.");
-          
-          // Optional: Visual feedback
-          const btn = document.querySelector("#clearChatBtn");
-          if (btn) {
-            btn.style.transform = "scale(0.9)";
-            setTimeout(() => {
-              btn.style.transform = "";
-            }, 150);
-          }
+        const chatOutput = document.getElementById("storyOutput");
+        if (chatOutput && typeof chatOutput.clearMessages === 'function') {
+          chatOutput.clearMessages();
+          console.log("💬 Chat history cleared via component method.");
         } else {
-          console.error("❌ ChatManager not available to clear history.");
+          console.error("❌ Could not find chatOutput element or clearMessages method.");
         }
-      }
-
-      /**
-       * Setup clear chat button
-       */
-      function setupClearChatButton() {
-        console.log("🔧 Setting up clear chat button...");
-        const clearBtn = document.querySelector("#clearChatBtn");
-        if (!clearBtn) {
-          console.warn("⚠️ Clear chat button not found, retrying in 500ms...");
-          setTimeout(setupClearChatButton, 500);
-          return;
-        }
-        clearBtn.addEventListener("click", handleClearChat);
-        console.log("✅ Clear chat button event listener added successfully");
       }
 
       /**
