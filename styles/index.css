@@ -666,72 +666,72 @@
    =========================================== */
 
 .index-chat-container {
-  width: 75%;
-  max-width: 1000px;
-  display: none; /* Hidden by default */
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 0 auto 2rem auto;
-  
-  /* Floating chat styles */
+  /* Core positioning */
   position: fixed;
-  top: 8rem; /* Aligned with hero top */
-  right: 20px;
-  width: 420px;
-  max-width: 420px;
-  height: calc(100vh - 10rem); /* Full height minus header and footer */
-  overflow: hidden;
   z-index: 1000;
+  right: 2.5rem;
+  /* Position it neatly above the button (64px button height + 1rem gap) */
+  bottom: calc(2.5rem + 64px + 1rem); 
   
-  /* Enhanced glassmorphism */
-  background: rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 1.5rem;
+  /* Sizing */
+  width: 370px;
+  max-width: calc(100vw - 2rem);
+  max-height: 60vh;
   
-  /* Enhanced shadows */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  /* Visuals */
+  background: rgba(30, 41, 59, 0.75); /* Glassmorphism background */
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   
-  /* Animation */
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Layout inside */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* Initial state for animation (hidden) */
   opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: all 0.3s ease;
   pointer-events: none;
 }
 
 /* Show state for floating chat */
 .index-chat-container.show {
-  display: flex;
   opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
 /* Close button for floating chat */
 .floating-chat-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 26px;
+  height: 26px;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   z-index: 10;
+  padding: 0;
 }
 
 .floating-chat-close:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(102, 126, 234, 0.4);
   color: rgba(255, 255, 255, 1);
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 /* Chat output section - larger area for story responses */
@@ -741,11 +741,14 @@
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-color: rgba(102, 126, 234, 0.4) transparent;
+  margin-bottom: 0; /* Remove margin to connect with input section */
+  border-bottom-left-radius: 0; /* Connect with input section */
+  border-bottom-right-radius: 0; /* Connect with input section */
 }
 
 .index-chat-output-section::-webkit-scrollbar {
-  width: 8px;
+  width: 4px; /* Thinner scrollbar */
 }
 
 .index-chat-output-section::-webkit-scrollbar-track {
@@ -753,56 +756,56 @@
 }
 
 .index-chat-output-section::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(102, 126, 234, 0.4); /* Match theme color */
   border-radius: 4px;
 }
 
 .index-chat-output-section::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(102, 126, 234, 0.6);
 }
 
 /* Chat input section - compact area for user input */
 .index-chat-input-section {
   order: 2;
   flex-shrink: 0;
-  min-height: 120px;
-  max-height: 180px;
+  min-height: 80px; /* Reduced height */
+  max-height: 120px; /* Reduced max height */
+  margin-top: 0; /* Remove margin to connect with output section */
+  border-top-left-radius: 0; /* Connect with output section */
+  border-top-right-radius: 0; /* Connect with output section */
+  border-top: 1px solid rgba(102, 126, 234, 0.2); /* Subtle separator */
 }
 
+/* Shared styles for both sections - more unified look */
 .index-chat-output-section,
 .index-chat-input-section {
-  background: rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 2rem;
+  background: rgba(30, 41, 59, 0.7); /* Slightly lighter than container */
+  border-radius: 12px; /* Consistent radius */
+  padding: 0.75rem; /* Reduced padding */
 
-  /* Enhanced shadows */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  /* Subtle shadows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   /* Smooth interactions */
   transition: all var(--story-duration-medium) var(--story-ease-smooth);
 }
 
-.index-chat-output-section,
+/* Remove hover effects for more consistent UI */
+.index-chat-output-section:hover,
 .index-chat-input-section:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: rgba(30, 41, 59, 0.7); /* Keep same background */
+  transform: none; /* No movement on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Keep same shadow */
 }
 
-.index-chat-output-section,
-.index-chat-input-section h3 {
-  font-size: 1.25rem;
+.index-chat-output-section h3 {
+  font-size: 0.95rem; /* Smaller font */
   font-weight: 600;
   color: var(--story-neutral-0);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem; /* Smaller margin */
   text-align: center;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  opacity: 0.9; /* Slightly transparent */
 }
 
 /* ===========================================
@@ -879,6 +882,8 @@
   }
 
   .index-chat-container {
+    position: fixed !important; /* Ensure fixed position */
+    bottom: 8rem !important; /* Maintain bottom position */
     width: 420px;
     max-width: 420px;
     right: 2rem;
@@ -903,6 +908,8 @@
   }
 
   .index-chat-container {
+    position: fixed !important; /* Ensure fixed position */
+    bottom: 8rem !important; /* Maintain bottom position */
     width: 400px;
     max-width: 400px;
   }
@@ -929,6 +936,8 @@
   }
 
   .index-chat-container {
+    position: fixed !important; /* Ensure fixed position */
+    bottom: 8rem !important; /* Maintain bottom position */
     width: 480px;
     max-width: 480px;
     right: 3rem;
@@ -956,6 +965,8 @@
   }
 
   .index-chat-container {
+    position: fixed !important; /* Ensure fixed position */
+    bottom: 8rem !important; /* Maintain bottom position */
     width: 360px;
     max-width: 360px;
     right: 1.5rem;
@@ -997,18 +1008,15 @@
     overflow: visible;
   }
 
-  /* Switch to inline layout for tablet */
+  /* Keep floating layout for tablet - maintain fixed position */
   .index-chat-container {
-    position: static;
+    position: fixed !important; /* Keep fixed position for floating behavior */
     width: 85%;
-    max-width: 600px;
-    height: auto;
-    margin: 2rem auto 2rem auto;
-    transform: none;
-    top: auto;
-    right: auto;
-    left: auto;
-    opacity: 1;
+    max-width: 360px; /* Smaller width for tablet */
+    height: 75vh; /* Responsive height */
+    bottom: 8rem !important; /* Position above the chatbot button */
+    right: 1rem; /* Adjust right position for tablet */
+    transform: none !important; /* Remove transform conflicts */
     pointer-events: auto;
   }
 
@@ -1099,18 +1107,15 @@
     font-size: 1rem;
   }
 
-  /* Mobile chatbot - below chapter 1 */
+  /* Mobile chatbot - keep floating */
   .index-chat-container {
-    position: static;
+    position: fixed !important; /* Keep fixed position for floating behavior */
     width: 90%;
-    max-width: 600px;
-    height: auto;
-    margin: 2rem auto 2rem auto;
-    transform: none;
-    top: auto;
-    right: auto;
-    left: auto;
-    opacity: 1;
+    max-width: 320px; /* Smaller width for mobile */
+    height: 70vh; /* Responsive height */
+    bottom: 8rem !important; /* Position above the chatbot button */
+    right: 1rem; /* Adjust right position for mobile */
+    transform: none !important; /* Remove transform conflicts */
     pointer-events: auto;
   }
 
@@ -1344,18 +1349,15 @@
     border-radius: 12px;
   }
 
-  /* Mobile landscape chatbot - below chapter 1 */
+  /* Mobile landscape chatbot - keep floating */
   .index-chat-container {
-    position: static;
-    width: 95%;
-    max-width: 500px;
-    height: auto;
-    margin: 2rem auto 2rem auto;
-    transform: none;
-    top: auto;
-    right: auto;
-    left: auto;
-    opacity: 1;
+    position: fixed !important; /* Keep fixed position for floating behavior */
+    width: 85%;
+    max-width: 340px; /* Smaller width for mobile landscape */
+    height: 65vh; /* Responsive height */
+    bottom: 6rem !important; /* Slightly lower for landscape */
+    right: 1rem; /* Adjust right position for mobile landscape */
+    transform: none !important; /* Remove transform conflicts */
     pointer-events: auto;
     padding: 1rem;
   }

@@ -34,7 +34,11 @@
         <div class="header-content">
           <h1 class="scene-title" id="main-title">📖 Interactive Story</h1>
           <nav class="scene-nav" role="navigation" aria-label="Navigasi utama">
-            <a href="discussion.html" class="nav-btn" aria-describedby="main-title">
+            <a
+              href="discussion.html"
+              class="nav-btn"
+              aria-describedby="main-title"
+            >
               <span aria-hidden="true">💬</span> Discussion
             </a>
             <a href="#" class="nav-btn" aria-describedby="main-title">
@@ -47,10 +51,17 @@
       <!-- Main Content -->
       <main class="scene-main" role="main" aria-labelledby="main-title">
         <!-- Scene Image Area -->
-        <section class="scene-image" id="sceneImageContainer" role="img" aria-label="Area gambar cerita interaktif">
+        <section
+          class="scene-image"
+          id="sceneImageContainer"
+          role="img"
+          aria-label="Area gambar cerita interaktif"
+        >
           <!-- Story Title Overlay -->
           <div class="story-title-overlay" role="banner">
-            <h2 class="story-title" id="story-title">Suara dari Titik Nol: Kisah Dahlia</h2>
+            <h2 class="story-title" id="story-title">
+              Suara dari Titik Nol: Kisah Dahlia
+            </h2>
           </div>
 
           <img
@@ -64,13 +75,15 @@
 
           <!-- Image Caption Overlay -->
           <div class="image-caption-overlay" role="contentinfo">
-            <p id="image-credit">Ilustrasi gambar dibuat dengan Gemini 2.5 Pro</p>
+            <p id="image-credit">
+              Ilustrasi gambar dibuat dengan Gemini 2.5 Pro
+            </p>
           </div>
 
           <!-- Start Story Button Overlay -->
           <div class="start-story-overlay" role="toolbar">
-            <button 
-              class="start-story-btn" 
+            <button
+              class="start-story-btn"
               type="button"
               aria-label="Mulai membaca cerita interaktif Suara dari Titik Nol"
               aria-describedby="story-title"
@@ -82,7 +95,11 @@
         </section>
 
         <!-- Scene Text Area -->
-        <section class="scene-text" role="article" aria-labelledby="chapter-title">
+        <section
+          class="scene-text"
+          role="article"
+          aria-labelledby="chapter-title"
+        >
           <div class="scene-text-content">
             <h2 id="chapter-title">Chapter 1: The Beginning</h2>
             <p>
@@ -90,9 +107,9 @@
               berpetualang melalui berbagai pilihan dan konsekuensi. Setiap
               keputusan yang Anda buat akan mempengaruhi jalan cerita.
             </p>
-            <div 
-              class="call_action choice" 
-              role="complementary" 
+            <div
+              class="call_action choice"
+              role="complementary"
               aria-label="Pilihan cerita interaktif"
               tabindex="0"
             >
@@ -106,57 +123,66 @@
             <!-- TODO: Re-enable for development/demo purposes if needed -->
           </div>
         </section>
-
-        <!-- Chat Components Area - Floating Layout for Index -->
-        <aside 
-          class="index-chat-container" 
-          id="chatContainer" 
-          role="complementary" 
-          aria-label="Panel chat interaktif"
-          aria-hidden="true"
-        >
-          <!-- Close button for floating chat -->
-          <button
-            class="floating-chat-close"
-            id="closeChatBtn"
-            type="button"
-            aria-label="Tutup panel chat"
-            title="Tutup panel chat (Escape)"
-          >
-            <span aria-hidden="true">✕</span>
-          </button>
-
-          <!-- Chat Output Section (AI Responses) -->
-          <section class="index-chat-output-section" role="log" aria-label="Respon cerita dari AI">
-            <h3 id="chat-output-title">
-              <span aria-hidden="true">🤖</span> Story Response
-            </h3>
-            <!-- AI responses and story narration appear here -->
-            <chat-output 
-              id="storyOutput" 
-              aria-labelledby="chat-output-title"
-              aria-live="polite"
-            ></chat-output>
-          </section>
-
-          <!-- Chat Input Section (User Input) -->
-          <section class="index-chat-input-section" role="form" aria-label="Input untuk berinteraksi dengan cerita">
-            <chat-input
-              id="storyInput"
-              placeholder="Tuliskan pilihan atau pertanyaan Anda tentang cerita..."
-              aria-label="Input pesan untuk berinteraksi dengan cerita"
-              aria-describedby="chat-input-help"
-            ></chat-input>
-            <div id="chat-input-help" class="sr-only">
-              Ketik pesan Anda dan tekan Enter untuk mengirim, atau gunakan tombol kirim
-            </div>
-          </section>
-        </aside>
       </main>
 
       <!-- Shared Footer -->
       <shared-footer current-page="index"></shared-footer>
     </div>
+
+    <!-- Chat Components Area - Floating Layout for Index -->
+    <aside
+      class="index-chat-container"
+      id="chatContainer"
+      role="complementary"
+      aria-label="Panel chat interaktif"
+      aria-hidden="true"
+    >
+      <!-- Close button for floating chat -->
+      <button
+        class="floating-chat-close"
+        id="closeChatBtn"
+        type="button"
+        aria-label="Tutup panel chat"
+        title="Tutup panel chat (Escape)"
+      >
+        <span aria-hidden="true">✕</span>
+      </button>
+
+      <!-- Chat Output Section (AI Responses) -->
+      <section
+        class="index-chat-output-section"
+        role="log"
+        aria-label="Respon cerita dari AI"
+      >
+        <h3 id="chat-output-title">
+          <span aria-hidden="true">🤖</span> Story Response
+        </h3>
+        <!-- AI responses and story narration appear here -->
+        <chat-output
+          id="storyOutput"
+          aria-labelledby="chat-output-title"
+          aria-live="polite"
+        ></chat-output>
+      </section>
+
+      <!-- Chat Input Section (User Input) -->
+      <section
+        class="index-chat-input-section"
+        role="form"
+        aria-label="Input untuk berinteraksi dengan cerita"
+      >
+        <chat-input
+          id="storyInput"
+          placeholder="Tuliskan pilihan atau pertanyaan Anda tentang cerita..."
+          aria-label="Input pesan untuk berinteraksi dengan cerita"
+          aria-describedby="chat-input-help"
+        ></chat-input>
+        <div id="chat-input-help" class="sr-only">
+          Ketik pesan Anda dan tekan Enter untuk mengirim, atau gunakan
+          tombol kirim
+        </div>
+      </section>
+    </aside>
 
     <!-- Floating Chatbot Button -->
     <button
@@ -175,12 +201,14 @@
         aria-hidden="true"
         role="presentation"
       />
-      <span 
-        id="chatbot-tooltip" 
-        class="chatbot-tooltip" 
+      <span
+        id="chatbot-tooltip"
+        class="chatbot-tooltip"
         role="tooltip"
         aria-live="polite"
-      >Hai, Klik jika butuh pendampingan saya ya</span>
+        >Hai, Klik jika butuh pendampingan saya ya!
+        <span class="emoji-wave">👋</span></span
+      >
       <span class="btn-pulse" aria-hidden="true"></span>
     </button>
 
@@ -442,106 +470,52 @@
 
         // Toggle floating chat panel
         const chatContainer = document.querySelector("#chatContainer");
-        const sceneContainer = document.querySelector(".scene-container");
 
-        if (chatContainer && sceneContainer) {
+        if (chatContainer) {
           const isVisible = chatContainer.classList.contains("show");
 
           if (isVisible) {
-            // Hide chat and reset layout
+            // Hide floating chat (no layout changes needed)
             chatContainer.classList.remove("show");
             chatContainer.setAttribute("aria-hidden", "true");
-            sceneContainer.classList.remove("chat-open");
-            
+
             // Update button ARIA state
             const chatbotBtn = document.querySelector(".floating-chatbot-btn");
             if (chatbotBtn) {
               chatbotBtn.setAttribute("aria-expanded", "false");
             }
-            
-            console.log("💬 Chat panel hidden, layout reset");
+
+            console.log("💬 Floating chat panel hidden");
           } else {
-            // Show chat and shift layout
+            // Show floating chat (no layout changes needed)
             chatContainer.classList.add("show");
             chatContainer.setAttribute("aria-hidden", "false");
-            sceneContainer.classList.add("chat-open");
-            
+
             // Update button ARIA state
             const chatbotBtn = document.querySelector(".floating-chatbot-btn");
             if (chatbotBtn) {
               chatbotBtn.setAttribute("aria-expanded", "true");
             }
-            
+
             // Focus management - focus on chat input when opened
             setTimeout(() => {
               const chatInput = document.getElementById("storyInput");
               if (chatInput && chatInput.shadowRoot) {
-                const input = chatInput.shadowRoot.querySelector(".message-input");
+                const input =
+                  chatInput.shadowRoot.querySelector(".message-input");
                 if (input) {
-                  input.focus();
+                  input.focus({ preventScroll: true });
                 }
               }
             }, 100);
-            
-            console.log("💬 Chat panel shown, layout shifted");
+
+            console.log("💬 Floating chat panel shown");
 
             // Hide tooltip when chat is opened
             hideChatbotTooltip();
           }
-
-          // Debug layout after changes
-          setTimeout(() => {
-            debugLayoutIssues();
-
-            // Force reflow to ensure CSS changes are applied
-            const sceneMain = document.querySelector(".scene-main");
-            const chatContainer = document.querySelector("#chatContainer");
-            if (sceneMain && chatContainer) {
-              const sceneStyle = window.getComputedStyle(sceneMain);
-              const chatStyle = window.getComputedStyle(chatContainer);
-              const chatRect = chatContainer.getBoundingClientRect();
-              const sceneRect = sceneMain.getBoundingClientRect();
-
-              console.log("🎯 Scene main computed width:", sceneStyle.width);
-              console.log(
-                "🎯 Scene main computed margin-left:",
-                sceneStyle.marginLeft
-              );
-              console.log(
-                "🎯 Scene main computed margin-right:",
-                sceneStyle.marginRight
-              );
-              console.log(
-                "🎯 Scene main computed max-width:",
-                sceneStyle.maxWidth
-              );
-              console.log("💬 Chat container width:", chatStyle.width);
-              console.log("💬 Chat container right position:", chatStyle.right);
-              console.log("📏 Scene rect:", {
-                left: sceneRect.left,
-                right: sceneRect.right,
-                width: sceneRect.width,
-              });
-              console.log("📏 Chat rect:", {
-                left: chatRect.left,
-                right: chatRect.right,
-                width: chatRect.width,
-              });
-              console.log(
-                "📏 Actual spacing between content and chat:",
-                Math.round(chatRect.left - (sceneRect.left + sceneRect.width)) +
-                  "px"
-              );
-              console.log(
-                "⚠️ Overlap check:",
-                sceneRect.left + sceneRect.width > chatRect.left
-                  ? "OVERLAP DETECTED!"
-                  : "No overlap"
-              );
-            }
-          }, 500);
         } else {
-          console.error("❌ Chat container or scene container not found!");
+          console.error("❌ Chat container not found!");
         }
 
         // Visual feedback
@@ -569,15 +543,15 @@
         }
 
         closeBtn.addEventListener("click", handleChatClose);
-        
+
         // Add keyboard support for close button
-        closeBtn.addEventListener("keydown", function(event) {
+        closeBtn.addEventListener("keydown", function (event) {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             handleChatClose(event);
           }
         });
-        
+
         console.log("✅ Chat close button event listener added successfully");
       }
 
@@ -592,15 +566,13 @@
           event.stopPropagation();
         }
 
-        // Hide chat container and reset layout
+        // Hide floating chat container (no layout changes needed)
         const chatContainer = document.querySelector("#chatContainer");
-        const sceneContainer = document.querySelector(".scene-container");
 
-        if (chatContainer && sceneContainer) {
+        if (chatContainer) {
           chatContainer.classList.remove("show");
           chatContainer.setAttribute("aria-hidden", "true");
-          sceneContainer.classList.remove("chat-open");
-          
+
           // Update button ARIA state
           const chatbotBtn = document.querySelector(".floating-chatbot-btn");
           if (chatbotBtn) {
@@ -608,8 +580,8 @@
             // Return focus to chatbot button
             chatbotBtn.focus();
           }
-          
-          console.log("💬 Chat panel closed, layout reset");
+
+          console.log("💬 Floating chat panel closed");
 
           // Show tooltip again when chat is closed
           showChatbotTooltip();
